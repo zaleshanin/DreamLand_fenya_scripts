@@ -1,0 +1,91 @@
+/* Мирович, отдавая воинские почести почившему, салютовал шпагой. В. Я. Шишков, «Емельян Пугачев. Книга первая. Ч. 1-2», 1934-1939 г. [НКРЯ] ◆ Стрельцы скосили глаза, четко отбивая шаг, сделали мушкетами вверх и налево. Меркуров выкинул шпагу из ножен, салютуя. Крыков выбросил из ножен свою. */
+.apply(function(){
+    //проверка наличия используемых функций
+    if(.tmp.quest==null 
+        || .tmp.quest.sleep==null
+        || .tmp.quest.say==null
+        || .tmp.quest.tell==null)
+        throw(".tmp.quest functions not found!!!");
+
+    if(.tmp.cityguards == null)
+        .tmp.cityguards = .Map();
+
+    this = .tmp.cityguards;
+
+    TalkTask = function(list, mob, ch) {
+        this = .Map();
+		
+		this.mob = mob;
+		this.ch = ch;
+		this.list = list;
+		
+		thread = .scheduler.Thread(function(this) {
+			try {
+				run();
+			} catch (e) {
+                if(e == "sleep: ch left the room" || e == "sleep: someone is dead") {
+                    // персонаж ушел, или кто-то скончался - это норма!
+                    .print("cityguard.TalkTask normal: " + e);
+                } else {
+                    .print("cityguard.TalkTask: " + e);
+                }
+			}
+			cleanup();
+		}, this);
+        run = function() {
+            for(phrase in list) {
+                debug(phrase);
+                say(phrase,0);
+            }
+            done();
+        };
+        cleanup = function() {
+			mob = null;
+			ch = null;
+            list = null;
+			thread = null;
+		};
+		wait = function(seconds, mob, ch) {
+			.tmp.quest.sleep(seconds, mob, ch);
+		};
+        say = function(msg, pause) {
+			.tmp.quest.say(msg, mob, ch);
+			wait(pause);
+		};
+        tell = function(msg, pause) {
+			.tmp.quest.tell(msg, mob, ch);
+			wait(pause);
+		};
+        done = function() {
+            //записывать оповещенных, чтоб не спамить лишний раз
+        };
+        debug = function(str) {
+            if(.buildplot) {
+                var zal;
+                zal = .get_char_world("Zaleshanin");
+                if(zal!=null) zal.act("citiguards debug:"+str);
+            }
+
+        };
+        
+        return this;
+    };
+
+    OnSpec = function(mob) {
+        for (ch in mob.in_room.ppl) {
+            if(mob.talktask != null) break;
+
+            if(ch.is_npc()) continue;
+
+            var list; 
+            list = .List().add("Привет раз.","Привет два.","Привет три.");
+            
+            mob.talktask = .tmp.cityguards.TalkTask(list, mob, ch);
+            mob.talktask.thread.start();
+        }
+    };
+
+    .get_mob_index(1112).onSpec = function(mob) {
+        .tmp.cityguards.OnSpec(mob);
+    };
+})
