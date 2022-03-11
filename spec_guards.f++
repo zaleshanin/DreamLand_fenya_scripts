@@ -1,0 +1,103 @@
+
+.apply(function(){
+    //проверка наличия используемых функций
+    if(.tmp.quest==null 
+        || .tmp.quest.sleep==null
+        || .tmp.quest.say==null
+        || .tmp.quest.tell==null)
+        throw(".tmp.quest functions not found!!!");
+
+    if(.tmp.cityguards == null)
+        .tmp.cityguards = .Map();
+
+    this = .tmp.cityguards;
+
+    TalkTask = function(list, mob, ch) {
+        this = .Map();
+		
+		this.mob = mob;
+		this.ch = ch;
+		this.list = list;
+		
+		thread = .scheduler.Thread(function(this) {
+			try {
+				run();
+			} catch (e) {
+                if(e == "sleep: ch left the room" || e == "sleep: someone is dead") {
+                    // персонаж ушел, или кто-то скончался - это норма!
+                    
+                    .print("cityguard.TalkTask normal: " + e);
+                } else {
+                    .print("cityguard.TalkTask: " + e);
+                }
+                debug(e);
+			}
+			//cleanup();
+		}, this);
+        run = function() {
+            for(phrase in list) {
+                debug(phrase);
+                say(phrase,1);
+            }
+            done();
+        };
+        cleanup = function() {
+			mob = null;
+			ch = null;
+            list = null;
+			thread = null;
+		};
+		wait = function(seconds, mob, ch) {
+            .scheduler.sleep(seconds * 4);
+            if (mob.dead || ch.dead)
+                throw "sleep: someone is dead";
+            if (mob.in_room != ch.in_room)
+                throw "sleep: ch left the room";
+        };
+        say = function(msg, pause) {
+			.tmp.quest.say(msg, mob, ch);
+			wait(pause, mob, ch);
+		};
+        tell = function(msg, pause) {
+			.tmp.quest.tell(msg, mob, ch);
+			wait(pause, mob, ch);
+		};
+        done = function() {
+            mob.talktask=null;
+            //записывать оповещенных, чтоб не спамить лишний раз
+        };
+        debug = function(str) {
+            if(.buildplot) {
+                var zal;
+                zal = .get_char_world("Miyamoto");
+                if(zal!=null) zal.act("citiguards debug:"+str);
+            }
+
+        };
+        
+        return this;
+    };
+
+    OnSpec = function(mob) {
+        for (ch in mob.in_room.ppl) {
+            if(mob.talktask != null 
+                && mob.talktask.thread!=null 
+                && mob.talktask.thread.running) 
+                break;
+
+            if(ch.is_npc()) continue;
+
+            var list; 
+            list = .List().add("Привет раз.","Привет два.","Привет три.");
+            
+            mob.talktask = .tmp.cityguards.TalkTask(list, mob, ch);
+            mob.talktask.thread.start();
+        }
+    };
+
+    /* .get_mob_index(1112).onSpec = function(mob) {
+        .tmp.cityguards.OnSpec(mob);
+    }; */
+    /* $C1, отдавая воинские почести, салютет $O1. 
+    $C1 выкинул $O1 из ножен, салютуя.*/
+})

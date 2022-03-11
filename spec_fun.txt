@@ -1,0 +1,938 @@
+
+spec_assassinater:
+  Деревня Анон:
+    [24132] shaolin mercenary merc2 шаолиньский наемник
+spec_breath_acid:
+  Облачная Гора:
+    [13254] Gauzrah гаузрах
+  Гора Смерти:
+    [14712] black dragon черный дракон
+  Ад:
+    [10456] stomach dragon желудочный дракон
+    [10412] living wall живая стена
+  Армагеддон:
+    [14011] horseman red алый всадник
+  Деревня Гномов:
+    [1513] мышь bat black
+  Дьявольский Монастырь:
+    [30811] black dragon черный дракон
+  Галактика:
+    [9332] polaris polar star полярная пвезда
+  Каньон Стихий:
+    [9219] acid blob elemental кислотная капля элементал
+    [9212] water elemental ruler повелитель элементалов воды
+  Королевство Зеркал:
+    [19057] green master зеленый мастер
+  Логовище Сайкуалы:
+    [13403] homunculus docile послушный гомункул
+  Мах'н-Тор:
+    [2302] dweller cave beast житель пещер тварь
+    [2314] worm ice iceworm ледяной червь
+  Мория:
+    [4154] bat black черная летучая мышь
+  Подземье (UnderDark):
+    [16126] demon hezron демон хезрон
+  Вивернова башня:
+    [1614] black pudding черный пудинг
+  Замок Драконов:
+    [2222] dragon black дракон
+spec_breath_any:
+  Облачная Гора:
+    [13249] Barnok барнок
+  Огненная Гора:
+    [5766] dragon дракон
+  Гора Смерти:
+    [14723] hydra гидра
+  Абисс:
+    [25021] fire elemental sultan султан элементаль
+    [25020] air elemental lord лорд элементаль
+    [25019] earth elemental king король элементаль
+  Астрал:
+    [7714] lord gith лорд гит
+    [7713] githyanki lich queen королева лич
+  Бангзуйские Сады:
+    [21911] pok too пок ту
+    [21917] wang gao ванг гао
+    [21912] see tong си тонг
+    [21907] ching fat чинг фат
+  Большой Герихельм:
+    [7555] правительница duchess gerighelm
+  Долина Титанов:
+    [5870] croupier крупье young man молодой человек
+    [18040] дерево evil tree
+    [18039] дракончик dragon baby evil
+  Город Дроу:
+    [5109] yochlol servant questor lloth квестор йоклол служанка ллот ллос
+  Иггдрасиль:
+    [2913] gorgimera горгимера
+  Канализация:
+    [7043] чешуйчатый василиск basilisk
+  Каньон Стихий:
+    [9237] HUGE elemental ОГРОМНЫЙ элементал
+    [9204] elemental guardian хранитель стихий
+    [9207] large elemental большой элементал
+    [9235] baby rainbow dragon младенец радужного дракона
+  Казино:
+    [5870] croupier крупье young man молодой человек
+  Королевство Зеркал:
+    [19062] phoenix bird феникс птица
+    [19061] light figure being lord master лорд света
+    [19040] something нечто
+  Мидгаард:
+    [3001] baker булочник
+  Новый Офкол:
+    [633] dragonknight knight dragon дракон рыцарь
+    [629] chaplain jerrold questor капеллан квестор джерольд
+    [631] dragon golden ancient древний золотой дракон
+    [630] dragonlord lord dragon knight дракон правитель лорд рыцарь
+  Новый Талос:
+    [9511] shopkeeper продавец
+    [9545] old man старик
+  Олимп:
+    [919] atum ra sun god avatar атум ра бог солнца аватар
+    [914] volva one eye Odin вельва одноглазая Один
+  Остров Дракири:
+    [11888] drakyri warden надзирательница
+  Озеро Кристалмир:
+    [10104] Драконид Baaz
+  Парк Сумрачных Ветров:
+    [21811] thysahn тисахн
+  Пески Скорби:
+    [5005] медный дракон dragon brass
+  Пик Драконов:
+    [2400] Copper Dragon медный дракон
+    [2401] White Dragon белый дракон
+    [2403] Time Dragon Spirit дух дракона времени
+    [2413] Fireflash lord dragon Вспышка Пламени повелитель драконов
+    [2407] eternity dragon дракон вечности
+  Подземелья Дварфов:
+    [2016] prism dragon prismdragon дракон
+  Прерии:
+    [33114] legend beer lvivske пиво львовское легенда
+    [33117] newborn baby centaur новорожденный кентавренок
+    [33109] black centaur chief предводитель племени
+    [33103] самая главная кентавра centauress chief
+    [33110] centaur little кентавреныш
+    [33101] centauress hippy кентавра хиппи
+    [33100] кентавра centauress
+    [33112] centaur master expert horth cloth мастер попон
+    [33120] gold fish золотая рыбка
+    [33121] copper fish медная рыбка
+    [33102] man free love victim жертва свободной любви человек
+    [33107] butterfly hunter centauress ловица бабочек кентавра
+    [33106] blue centauress witch Kelio голубая кентавра ведьма Келио
+    [33113] castle lvivske beer high lager пиво львовское высокий замок
+    [33108] behind kiosk centaur kirstyn  закиоскная кентавра Кирстин
+    [33104] centaur pedigree stallion племенной жеребец
+    [33105] centaur virgin кентаврийская девственница
+    [33122] four hoofed friend 4 четырехкопытный друг
+  Пригород Города Дроу:
+    [33114] legend beer lvivske пиво львовское легенда
+  Резиденция Редферна:
+    [7901] paladin solamnia соламнийский рыцарь
+  Тюрьма:
+    [32014] Wendy Cook Венди кухарка
+  Трельские Пещеры:
+    [18827] king gydon король гидон
+  Великие Пирамиды:
+    [8716] sphinx great великий сфинкс
+  Вестландия:
+    [10024] drunken villager пьяный деревенский житель
+  Вивернова башня:
+    [1616] ancient wyvern древняя виверна
+  Замок Драконов:
+    [2200] hatchling dragon baby дракон
+    [2243] queen draconian королева дракон
+    [2205] king draconian король драконидов
+    [2220] tiamat dragon дракон тиамат
+spec_breath_fire:
+  Облачная Гора:
+    [13246] Kringe кринг
+    [13253] Arnog арног
+  Огненная Гора:
+    [5760] dog пес
+  Гора Смерти:
+    [14716] fire elemental огненный элементал
+    [14729] hell hound hellhound адская гончая
+    [14711] red dragon красный дракон
+  Ад:
+    [10426] burning fool горящий шут
+    [10468] Fire Demon Великий демон огня
+    [10419] crispy critter хрупкое создание
+    [10430] fire devil демон огня
+    [10432] hell hound гончая Ада
+    [10403] incubus demon инкуб демон
+  Армагеддон:
+    [14025] beast зверь
+    [14010] horseman white белый всадник
+  Астрал:
+    [7719] fire furnace flame пламя
+  Деревня Гномов:
+    [1515] мышь bat fire
+  Долина Эльфов:
+    [7809] pyrohydra pyro hydra огненная гидра
+  Галактика:
+    [9314] draco baby драконенок
+    [9313] draco head голова дракона
+  Храм Шаолинь:
+    [20115] abbot Abbot monk настоятель Настоятель монах
+  Камелот:
+    [17337] demon огромный чернокожий демон
+  Канализация:
+    [7040] красный дракон red dragon
+  Каньон Стихий:
+    [9209] fire elemental ruler повелитель огненных элементалов
+    [9226] blue flame синее пламя
+  Королевство Зеркал:
+    [19011] bear zbear медведюга
+    [19055] red master красный мастер
+  Мория:
+    [4151] bat red красная летучая мышь
+  Новый Талос:
+    [9575] chimera химера
+  Олимп:
+    [920] chimera химера
+    [902] adept prometheus адепт прометея
+  Пески Скорби:
+    [5010] драковедьма ведьма  dracolich lich
+  Пиратские Острова:
+    [17025] worm lava лавовый червь
+    [17030] pele god fire пеле божество огня
+  Подземье (UnderDark):
+    [16124] noble cambion тифлинг дворянин
+    [16123] cambion тифлинг
+  Тюрьма:
+    [32023] mnemoth мнемос bronze dragon бронзовый дракон
+  Тайное Убежище Колдуна:
+    [15707] fire drake огненный дракончик
+  Великие Пирамиды:
+    [8709] ифрит efreeti efreet
+  Вестландия:
+    [10021] great red dragon великий красный дракон
+  Замок Драконов:
+    [2221] dragon red дракон
+  Шабаш:
+    [29134] beast hell flaming прислужник ада зверь пылающий
+spec_breath_frost:
+  Облачная Гора:
+    [13245] Drakknar драккнар
+  Гора Смерти:
+    [14713] white dragon белый дракон
+  Ад:
+    [10439] Ice Screamer Ледяной крикун
+    [10438] I-scream worker Орущий крикун
+    [10433] frozen body замороженное тело
+    [10469] frozen beef замороженная говядина
+    [10434] ice devil демон льда
+  Базар:
+    [14222] princess fatima принцесса Фатима
+  Каньон Стихий:
+    [9228] ice bandit ледяной бандит
+  Королевство Зеркал:
+    [19058] blue master голубой  мастер
+    [19012] withered knight изнуренный рыцарь
+    [19002] pale withered knight изнуренный рыцарь
+  Мах'н-Тор:
+    [2313] yeti white снежный человек
+  Мория:
+    [4153] bat white белая летучая мышь
+  Новый Талос:
+    [9570] cryohydra криогидра
+  Замок Драконов:
+    [2223] dragon white дракон
+spec_breath_gas:
+  Облачная Гора:
+    [13252] Ghanekar ганекар
+    [13251] gringle shadows грингл тени
+    [13255] Raechalin рейчалин
+    [13247] Maaklan Мааклан
+  Огненная Гора:
+    [5770] gas beast газовая тучка
+  Гора Смерти:
+    [14715] green dragon зеленый дракон
+    [14728] air elemental элементал воздух
+  Абисс:
+    [25001] keftab кефтаб
+  Ад:
+    [10417] blood кровь
+  Арахнос:
+    [6314] spider empress arachnos императрица арахнос
+    [6316] wormkin змееныш
+    [6302] dragon Yevaud дракон Йевауд
+    [6317] dragon wormkin дракон змий
+  Армагеддон:
+    [14012] horseman black черный всадник
+  Город Призраков:
+    [8111] undead dragon дракон лич
+  Хижина:
+    [810] winekeeper wine keeper хранитель вина
+    [811] bottle keeper bottlekeeper хранитель бутылок
+  Иггдрасиль:
+    [2909] dragon cloud облачный дракон
+  Каньон Стихий:
+    [9210] air elemental ruler повелитель элементалов воздуха
+  Королевство Зеркал:
+    [19059] violet master фиолетовый мастер
+    [19056] amber master янтарный мастер
+  Логовище Сайкуалы:
+    [13414] undead dragon Оживший Дракон Сайкуалы
+  Мидгаардский Зоопарк:
+    [8208] baby dragon lizard huge 8ft детеныш дракона ящерица огромная
+  Мория:
+    [4152] bat green зеленая летучая мышь
+  Равнины Севера:
+    [305] worm Shudde-M'ell червь шудде-м'эл
+  Страна Чудес:
+    [21014] caterpillar гусеница
+  Темница Герихельма:
+    [4800] пьяница охранник drunken guard
+  Замок Драконов:
+    [2225] dragon green дракон
+    [2241] dragon phase дракон
+spec_breath_lightning:
+  Облачная Гора:
+    [13210] dragon winged крылатый дракон
+    [13248] Bazarnog bronze puppy базарног бронзовый щенок
+  Запустение:
+    [23020] metal metallic orb strange странный металлический шар
+  Гора Смерти:
+    [14714] blue dragon синий дракон
+  Ад:
+    [10422] prisoner raiden пленник Райден
+  Деревня Анон:
+    [24135] drakyri mercenary merc5 наемник дракири
+  Долина Эльфов:
+    [7808] elf elder valley волшебница долины
+  Камелот:
+    [17316] beast questing зверь рыкающий
+  Каньон Стихий:
+    [9223] particle elemental элементная частица
+    [9230] hurricane ураган
+    [9227] magneto Магнето
+    [9211] lightning elemental ruler teshub повелитель элементалов молнии тешубу
+  Королевство Зеркал:
+    [19060] yellow master желтый мастер
+  Логово Джэра:
+    [32707] beorn Беорн
+    [32700] Jher Джэр
+  Мория:
+    [4150] bat blue синяя летучая мышь
+  Новый Талос:
+    [9574] behir бехир
+  Олимп:
+    [908] hephaestus smith гефест кузнец
+  Остров Дракири:
+    [24135] drakyri mercenary merc5 наемник дракири
+  Пещеры:
+    [22010] черный глубинный дракон dragon deep black
+  Прерии:
+    [24135] drakyri mercenary merc5 наемник дракири
+  Руины башни магов:
+    [33400] mage ghost призрак мага
+  Тюрьма:
+    [32010] Brad Warden надзиратель бред
+spec_captain:
+  Утеха:
+    [10201] captain guard капитан стражи
+spec_cast_adept:
+  MUD Школа:
+    [3708] adept razer адепт разер
+    [3707] adept leo cleric адепт лео
+  Базар:
+    [14213] healer monk монах
+  Большой Герихельм:
+    [7612] cleric healer монах лекарь
+  Деревня Анон:
+    [24100] деревенский шаман shaman
+  Долина Титанов:
+    [18101] лекарь healer
+  Древняя Троя:
+    [29525] machaon махаон
+  Галеон:
+    [40003] доктор healer doctor лекарь katzman кацман
+  Город Анон:
+    [31000] Gath healer гас лекарь первосвященник
+  Город Дроу:
+    [5112] priestess lloth healer жрица ллот лекарь
+  Королевство Зеркал:
+    [19031] father franklin отец франклин
+  Мидгаард:
+    [3012] healer лекарь
+    [3166] healer nacya лекарша нэйси
+    [3172] templeman священник
+  Новый Офкол:
+    [628] priestess ofcol healer жрица офкол лекарь
+  Новый Талос:
+    [9593] healer лекарь
+  Олимп:
+    [905] apollo аполлон
+    [907] pallas companion athena паллада спутница афина
+  Старый Мидгаард:
+    [5392] healer
+    [5395] dark-elf эльфийка темная
+  Стены Анона:
+    [31214] ghost girl привидение девушки
+    [31215] priestess varda жрица варды
+  Священная Роща:
+    [8900] hierophant druid иерофант друид
+  Утеха:
+    [10254] cleric healer kender кендер клерик лекарь
+  Шир:
+    [1158] знахарь sorcerer healer лекарь
+spec_cast_judge:
+  Огненная Гора:
+    [5744] железный циклоп cyclops iron
+  Гора Смерти:
+    [14701] death knight рыцарь смерти
+  Ааракокран:
+    [5613] bird aarakocran revolutionary castro ааракокран революционер
+  Ад:
+    [10448] Judge Whopper Главный судья
+    [10401] guardian hell стражник ада
+  Базар:
+    [14227] slave whore шлюшка
+  Большой Герихельм:
+    [7554] правитель duke gerighelm
+  Галеон:
+    [14227] slave whore шлюшка
+  Стены Анона:
+    [31211] crossbowman арбалетчик
+    [31210] marshal anon маршал анона
+spec_executioner:
+  Огненная Гора:
+    [5761] werewolf man оборотень
+  Гора Смерти:
+    [14702] iron golem железный голем
+    [14745] stone golem каменный голем
+  Большой Герихельм:
+    [7550] начальник охраны head guard
+  Деревня Анон:
+    [24115] champion хранитель чемпион
+  Дьявольский Монастырь:
+    [30801] clay golem глиняный голем
+  Мидгаард:
+    [3076] valkyrie валькирия
+  Парк Сумрачных Ветров:
+    [21805] axyll аксилл
+  Страна Чудес:
+    [21038] executioner палач
+  Тайное Убежище Колдуна:
+    [15706] flesh golem голем
+spec_fido:
+  MUD Школа:
+    [3714] beast чудовище
+  Огненная Гора:
+    [5742] prisoner заключенный
+  Запустение:
+    [23001] trolloc dha'vol троллок да'вол
+    [23010] lump disfigured diseased flesh омерзительная груда гниющей плоти
+    [23004] trolloc dhai'mon троллок дей'мон
+    [23003] trolloc ko'bal троллок ко'бал
+    [23005] flock raven ravens huge огромная стая воронов
+    [23006] trolloc kno'mon троллок кно'мон
+  Гора Смерти:
+    [14741] warg варг
+    [14722] mutant мутант
+    [14742] ghoul упырь
+    [14707] destrier конь
+    [14736] troll тролль
+  Ад:
+    [10421] manes гривастый полудемон
+    [10470] guard dog сторожевой пес
+  Базар:
+    [14220] beggar нищий
+  Деревня Анон:
+    [24125] wolf тощий волчара
+    [24127] dog бродячий пес
+    [24126] rat крыса
+  Дьявольский Монастырь:
+    [30815] pit beast зверь ямы
+  Город Анон:
+    [31042] rat огромная канализационная крыса
+    [31041] fido кровожадная фидошка
+  Хижина:
+    [805] youth werewolf оборотень
+  Королевство Зеркал:
+    [19047] fox grey серая лиса
+  Логово Джэра:
+    [32704] warg father отец варга
+    [32705] young hungry warg голодный молодой варг
+  Мавзолей:
+    [4606] hound zombie зомби адской гончей пса
+    [4605] ghoul hungry голодный упырь
+  Мидгаард:
+    [3062] fido dog зверюга
+  Новый Талос:
+    [9544] vulture стервятник
+  Пиратские Острова:
+    [17035] shark tiger тигровая акула
+    [17039] shark blue голубая акула
+    [17037] shark mako акула мако
+    [17036] shark white great большая белая акула
+    [17024] crab black черный краб
+    [17038] shark hammerhead молотоголовая акула
+  Старый Мидгаард:
+    [5383] fido dog собака фидо
+  Страна Чудес:
+    [21040] gryphon грифон
+  Тюрьма:
+    [32001] rat крыса
+  Тайное Убежище Колдуна:
+    [15705] troll guard стражник тролль
+    [15713] crocodile крокодил
+    [15720] otyugh отиуг
+  Замок Амбера:
+    [37044] собака dog
+spec_guard:
+  Гора Смерти:
+    [14710] blackguard guard черный страж
+    [14737] ettin йотун
+    [14706] elite guard элитный страж
+  Ааракокран:
+    [5628] bat breakfast lunch dinner snack appetizer закуска летучая мышка
+    [5625] bird aarakocra aarakocran cityguard guard городской страж
+    [5626] bird aarakocra aarakocran cityguard guard городской страж
+    [5627] bird aarakocra aarakocran cityguard guard городской страж
+  Базар:
+    [14221] guard стражник
+  Большой Герихельм:
+    [7531] стражник cityguard guard gerighelm
+    [7530] стражник cityguard guard gerighelm
+    [7536] дворцовый охранник palace guard
+    [7532] стражник cityguard guard gerighelm
+    [7528] молодой охранник junior guard
+    [7534] защитник defender gerighelm
+    [7535] защитник defender gerighelm
+    [7552] телохранитель bodyguard body guard
+    [7553] телохранитель bodyguard body guard
+  Деревня Анон:
+    [24129] militia member деревенский ополченец
+    [24128] militia member деревенский ополченец
+    [24130] militia member деревенская ополченка
+  Город Анон:
+    [31045] guard anon городская стражница анона
+    [31044] guard anon городской стражник анона
+    [31046] guard anon городской стражник анона
+  Храм Фемиды:
+    [4285] guard стражник
+  Камелот:
+    [17312] lancelot knight sir сэр ланселот рыцарь
+    [17301] knight reknown знаменитый рыцарь
+    [17303] knight quality достойный рыцарь
+    [17306] galahad knight sir сэр рыцарь галахад
+  Лихолесье:
+    [8805] chief guard начальник охраны
+    [8803] orc warrior орк воин
+  Логово Джэра:
+    [32713] left huge warg guard левосторонный большой варг охранник
+    [32714] right huge warg guard правосторонный большой варг охранник
+    [32709] Htrag warg breeder Хтраг
+    [32702] knanath Кнанатх
+  Мидгаард:
+    [3060] guard стражник
+    [3069] guard стражник
+    [3067] guard стражник
+    [3068] guard стражник
+  Новый Офкол:
+    [600] cityguard guard ofcol стражник офкола
+    [623] cityguard guard стражник офкола
+    [634] cityguard guard ofcol стражник офкола
+  Новый Талос:
+    [9561] sultans guard охранник
+    [9592] guard bodyguard телохранитель
+    [9582] royal guard elite стражник
+    [9562] sultans guard охранник
+  Олимп:
+    [909] maiden handmaid golden золотая дева
+  Остров Дракири:
+    [11875] drakyri laerkai shield paladin щит паладин
+  Разделенные Души:
+    [11608] white knight figure белый рыцарь фигура
+  Старый Мидгаард:
+    [5384] zombie guard зомби стражник
+    [5381] zombie guard зомби стражник
+  Старый Талос:
+    [5305] gordon defender гордон защитник
+    [5303] guard imperial cityguard гвардеец
+    [5320] guard imperial cityguard гвардеец
+    [5321] guard cityguard гвардеец
+  Стены Анона:
+    [31200] east wall guard страж восточной стены
+    [31207] guard captain west wall капитан западной стены
+    [31202] north wall guard страж северной стены
+    [31204] guard captain east wall капитан восточной стены
+    [31206] guard captain north wall капитан северной стены
+    [31203] west wall guard страж западной стены
+    [31201] south wall guard страж южной стены
+    [31205] guard captain south wall капитан южной стены
+  Страна Чудес:
+    [21030] soldier club card солдат пик
+    [21042] court officer судебный исполнитель
+  Тюрьма:
+    [32002] Prison Guard тюремный охранник
+    [32004] Cell Guard охранник камер
+  Тайное Убежище Колдуна:
+    [15709] guard страж
+  Утеха:
+    [10218] treasury guard страж сокровищницы
+    [10215] townguard guard стражник
+    [10204] townguard guard стражник
+    [10205] townguard guard agg стражник
+  Шабаш:
+    [29122] guard woodsman лесной страж
+  Шир:
+    [1110] shiriff ширифф
+    [1111] shiriff ширифф
+    [1121] battle master мастер битвы
+    [1112] thain Тэйн
+spec_janitor:
+  Базар:
+    [14226] slave раб
+  Город Анон:
+    [31036] janitor дворник
+  Логово Джэра:
+    [32712] Sapth slave Сапф
+  Мидгаард:
+    [3061] janitor дворник
+  Музей Зоологии:
+    [409] janitor уборщик
+  Новый Офкол:
+    [621] maid woman горничная
+  Прерии:
+    [33119] silver fish серебряная рыбка
+  Старый Мидгаард:
+    [5382] janitor дворник
+  Тюрьма:
+    [32003] Prison Worker тюремный работник
+  Тайное Убежище Колдуна:
+    [15708] zombie servant зомби слуга
+    [15717] kobold slave кобольд раб
+    [15718] ogre slave людоед невольник
+  Темница Герихельма:
+    [4804] псих mad
+spec_mayor:
+  Мидгаард:
+    [3143] mayor midgaard мэр мидгаарда
+spec_nasty:
+  Лихолесье:
+    [8802] orc scout орк разведчик
+  Мидгаард:
+    [3163] thief вор
+  Остров Дракири:
+    [11886] drakyri assassin убийца
+  Разделенные Души:
+    [11704] zdreni darkblade assassin form здрени темный клинок
+    [11720] zdreni venomblade assassin elf здрени отравленный клинок
+    [11707] zdreni apprentice assassin young
+    [11705] zdreni venomblade assassin drow здрени отравленный клинок
+    [11697] zdreni avenger figure здрени мститель
+    [11698] zdreni avenger assassin figure здрени мститель
+    [11701] zdreni blademaster assassin здрени мастер клинка
+    [11725] zdreni avenger leader figure здрени мститель
+    [11700] zdreni shadowmaster assassin dark elven form здрени мастер теней
+    [11699] zdreni deathmaster assassin здрени мастер смерти
+    [11702] zdreni magemaster assassin elf form здрени мастер магии
+    [11706] zdreni stiletto assassin здрени стилет
+    [11721] zdreni venomblade assassin drow здрени отравленный клинок
+    [11703] zdreni stalker assassin figure здрени сталкер
+    [11716] zdreni apprentice assassin здрени ученик
+    [11714] zdreni blademaster assassin здрени мастер клинка
+    [11715] zdreni apprentice assassin здрени ученица
+    [11718] zdreni venomblade assassin elf здрени отравленный клинок
+    [11717] zdreni magemaster assassin здрени мастер магии
+    [11719] zdreni stiletto assassin здрени стилет
+    [11713] zdreni apprentice assassin здрени ученик
+    [11712] zdreni apprentice assassin здрени ученица
+    [11711] zdreni magemaster assassin здрени мастер магии
+spec_ogre_member:
+  Опасный Район:
+    [2102] ogre gang member член банды огров огр банд
+    [2110] gang leader ogre главарь банды троллей банд
+    [2107] vandal ogre вандал огр
+    [2111] thug головорез
+spec_patrolman:
+  Опасный Район:
+    [2106] patrolman patrol man патрульный
+spec_poison:
+  Огненная Гора:
+    [5737] snake
+    [5762] ghoul упырь
+    [5753] rat giant крыса гигантская
+    [5749] bat giant летучая мышь
+    [5747] old man wererat оборотень крысолак
+    [5752] troll тролль
+    [5750] spider giant паук гигантский
+  Гора Смерти:
+    [14746] keeper хранитель
+    [14747] naga princess принцесса нага
+  Абисс:
+    [25010] kraken спрут кракен
+  Ад:
+    [10425] demonguard Демон-стражник
+  Арахнос:
+    [6306] spider drone паук трутень
+    [6303] spider wolf паук волк паук-волк
+    [6310] spider birdeater паук птицеед
+  Базар:
+    [14236] cobra кобра
+  Деревня Анон:
+    [24134] drow mercenary merc4 наемница дроу
+  Деревня Гномов:
+    [1510] крыса большая rat large
+    [1509] крыса rat
+    [1511] крыса rat giant
+  Деревня Смурфов:
+    [1912] azreal cat Азреал
+  Долина Титанов:
+    [24134] drow mercenary merc4 наемница дроу
+  Дьявольский Монастырь:
+    [30814] wyvern виверн
+  Галактика:
+    [9323] scorpio скорпион
+  Храм Зава:
+    [547] giant scorpion огромный скорпион
+    [4406] ядовитый дым smoke ooze
+  Храм Шаолинь:
+    [20111] Wuhua wuhua monk вухуа монах
+    [20107] evil monk злой монах
+  Изумрудный Лес:
+    [234] hellhound dog адская гончая собака
+  Канализация:
+    [7006] длинная змея snake
+    [7203] уродливый крысолак wererat rat were
+    [7204] гигантская крыса rat gigantic
+  Королевство Зеркал:
+    [19013] grey mires horse skeleton серая кобыла скелет
+    [19041] mass red ants красные муравьи
+  Леса Королевства Хаон:
+    [6112] dragon green громадная драконица змей зеленая
+    [6319] queen spider королева пауков
+    [6318] spider poisonous паук ядовитый
+  Лихолесье:
+    [8800] sylvan elf scout эльф разведчик
+  Логово Джэра:
+    [32703] adult mother warg мать варга
+    [32710] female warg breeder женщина варг
+    [32708] bat Летучая мышь
+    [32706] snake змея
+  Мах'н-Тор:
+    [2306] swamp wraith болотное привидение
+  Миденнир:
+    [3500] виверн wyvern
+  Мория:
+    [4102] guardian snake змея страж
+    [4001] garter snake неядовитая змея
+    [4000] python snake змея питон
+    [4053] snake змея
+    [4158] snake змея
+  Новый Талос:
+    [9577] giant hornet шершень
+  Олимп:
+    [922] roc птица рух
+  Озеро Кристалмир:
+    [10108] Черепаходракон turtle dragon
+  Парк Сумрачных Ветров:
+    [21806] afflack аффлак
+    [21813] passerby прохожий
+    [21812] alsbet альсбет
+  Пески Скорби:
+    [5003] маленький скорпион scorpion small
+  Пещера Клана Ярости:
+    [547] giant scorpion огромный скорпион
+  Подземелья Дварфов:
+    [2017] darken dark beast темная тварь
+  Пригород Соласа:
+    [17600] пчела bee
+    [24134] drow mercenary merc4 наемница дроу
+  Старая Топь:
+    [8309] змея анаконда snake anaconda
+    [8310] змея питон snake python
+  Священная Роща:
+    [8908] древняя змея snake
+  Тюрьма:
+    [32015] Steam Monster паровой монстр
+    [32006] cockroach таракан
+    [32024] Torry торри trader торговец
+  Тайное Убежище Колдуна:
+    [15714] war dog бойцовый пес
+    [15719] flind slave master надсмотрщик
+  Великие Пирамиды:
+    [8700] аспид змея asp snake
+    [8701] кобра змея cobra snake
+  Вольная Гавань:
+    [29230] blacksail admiral адмирал блэксейл
+    [29232] mourning lord лорд морнинг
+    [29231] oglethorpe master merchant оглторп глава купцов
+  Замок Драконов:
+    [2226] hydra гидра
+spec_thief:
+  Облачная Гора:
+    [13216] spider паук
+    [13227] thief dragon вор дракон
+  Огненная Гора:
+    [5768] hand рука
+  Запустение:
+    [23021] fox tall thin существо лиса
+  Высшая Башня Колдовства:
+    [1311] broom метла
+  Гора Смерти:
+    [14724] quasit бесенок
+    [14739] assassin убийца
+  Ааракокран:
+    [5623] bird aarakocra aarakocran sneaky guildmaster thief assassin мастер гильдии вор
+  Абисс:
+    [25033] demon nalfeshnee демон нальфешнеа
+  Ад:
+    [10442] office worker офисный работник Ада
+    [10402] pile coins куча монет
+    [10405] bar gold слиток золота
+  Антария:
+    [12314] Antharian child Антарианский мальчик
+    [12362] Kender Representative Представительница кендеров
+  Армагеддон:
+    [14030] thief вор
+  Астрал:
+    [7705] githyanki hunter гитианки охотник
+  Бангзуйские Сады:
+    [21906] zhi nuan жи нуан
+    [21903] ho min fat хо мин фат
+  Базар:
+    [14219] thief scoundrel негодяйский вор
+  Цирк:
+    [4751] kobold thief кобольд вор
+  Деревня Анон:
+    [24124] thief ворюга
+  Деревня Смурфов:
+    [1903] brainy smurf Брейни Смурф
+    [1909] smurfette eros смурфетта эрос
+    [1902] smurf смурф
+    [1901] smurf смурф
+    [1907] grumpy smurf Грампи Смурф
+    [1905] sleepy smurf Слиппи Смурф
+    [1908] jokey smurf Джоки Смурф
+    [1906] hefty smurf Хефти Смурф
+    [1904] handy smurf Хенди Смурф
+  Детский сад Дварфов:
+    [6604] bear ugly уродливый медведь
+    [6600] youth dwarven dwarf ребенок дварф
+    [6608] brat spoiled малыш испорченный
+  Долина Титанов:
+    [18031] нищий grubby beggar
+  Галактика:
+    [9301] poor mudder бедный оборванец
+  Город Анон:
+    [31018] greasy bartender
+    [31014] kender guildmaster erevan ilesere кендеров глава гильдии эреван илесир
+    [31040] thief воришка
+  Храм Шаолинь:
+    [20117] guest visiting гость посетитель
+  Иггдрасиль:
+    [2911] wemic вемик
+  Камелот:
+    [17318] mordred boy мордред мальчик
+  Каньон Стихий:
+    [9234] alchemist алхимик
+    [9224] dust elemental элементал пыли
+    [9225] eddie elemental вихревой элементал
+  Кольцо Фей:
+    [29105] puck faerie пак фейри
+  Королевство Зеркал:
+    [19054] shadows thief hidden спрятанный воришка тени
+    [19036] gardener gardner lady садовница леди
+    [19045] citizen man commoner житель молодой человек мужчина юноша
+    [19050] waiter официант
+    [19042] man card shark карточный шулер
+    [19046] commoner citizen woman женщина жительница
+    [19044] carvallo undertaker карвалло предприниматель скупщик
+    [19051] urchin boy мальчишка постреленок
+    [19052] lady woman slut whore night леди шлюха женщина
+    [19053] pimp guy master сутенер тип сводник
+  Логово Джэра:
+    [32701] warg young молодой варг
+    [32711] male warg breeder самец осеменитель варг
+  Мидгаард:
+    [3005] thief вор
+  Мория:
+    [4155] thief вор
+  Новый Талос:
+    [9535] kid thief паренек
+    [9530] mustafah мустафа
+    [9538] gord горд
+  Олимп:
+    [923] citizen resident житель города
+    [903] hermes гермес
+  Остров Дракири:
+    [11849] stalker form сталкер фигура figure
+  Озеро Кристалмир:
+    [10113] старый винни пух old pooh bear
+  Парк Сумрачных Ветров:
+    [21803] azelaar азелаар
+    [21810] jorthan йортан
+    [21815] birgitta биргитта
+  Пик Драконов:
+    [2402] Pixie пикси
+    [2411] Pixie пикси
+  Подземье (UnderDark):
+    [16081] footpad разбойник
+    [16072] drow shillikif thief дроу вор шилликиф
+    [16082] cutpurse бандит
+    [16030] jinxkin humanoid гремлин существо
+    [16087] master thief вор мастер
+    [16027] gremlin form гремлин фигура
+    [16031] jermlaine human form гремлин существо
+    [16111] half-orc thief полуорк вор
+    [16086] magsman thief кидала
+    [16084] rogue жулик
+    [16085] sharper мошенник
+    [16083] filcher карманник
+    [16037] imp чертенок
+    [16068] drow endolar thief дроу вор эндолар
+    [16088] head thief глава гильдии
+  Разделенные Души:
+    [11653] figment imagination dark shape воображение
+    [11625] silent stalker figure бесшумный сталкер
+    [11651] assassin убийца
+    [11611] babbling sculptor бормочущий скульптор
+    [11610] mad gardener gnome
+    [11642] forgotten lies забытая ложь
+    [11666] menx jester менкс шут
+  Старая Топь:
+    [8312] ведьма hag
+  Страна Чудес:
+    [21035] knave hearts валет червей
+  Тюрьма:
+    [32000] Gatekeeper привратник
+    [32005] prisoner заключенный
+  Тайное Убежище Колдуна:
+    [15715] assassin убийца
+  Трельские Пещеры:
+    [18804] sandra chef сандра шеф-повар
+  Утеха:
+    [10232] brat boy пацаненок мальчик
+    [10217] town clerk городской клерк сборщик налогов
+    [10234] Thief вор
+    [10229] thief cloaked figure вор фигура плаще
+  Великие Пирамиды:
+    [8704] грабитель могил thief tomb
+    [8705] али баба вор ali baba thief
+  Вестландия:
+    [10025] dark thief вор
+  Замок Амбера:
+    [37015] воришка thief
+    [37040] трезвый кендер kender abstinent
+    [37048] нахальный кот cat
+    [37005] тень торшера shadow
+  Замок Драконов:
+    [2227] slave kobold раб кобольд
+    [2242] fool draconian дракониан шут
+  Шабаш:
+    [29128] libby trader halfling либби торговец хоббит халфлинг
+  Шир:
+    [1101] ring keeper хранитель кольца
+    [1122] halfling youth хоббитенок
+spec_troll_member:
+  Опасный Район:
+    [2104] bruiser troll бугай тролль
+    [2101] troll gang member член банды троллей тролль банд
+    [2103] gang leader troll главарь банды троллей
+    [2109] punk troll сопляк тролль
