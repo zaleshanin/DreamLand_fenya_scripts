@@ -36,7 +36,6 @@
 		}, this);
         run = function() {
             for(phrase in list) {
-                debug(phrase);
                 say(phrase,1);
             }
             done();
@@ -68,36 +67,73 @@
         };
         debug = function(str) {
             if(.buildplot) {
-                var zal;
-                zal = .get_char_world("Miyamoto");
-                if(zal!=null) zal.act("citiguards debug:"+str);
+                var vict;
+                vict = .get_char_world("Zaleshanin");
+                if(vict!=null) vict = .get_char_world("Miyamoto");
+                if(vict!=null) vict.act("citiguards debug: "+str);
             }
-
         };
         
         return this;
     };
 
     OnSpec = function(mob) {
+        this = .tmp.cityguards;
+        //не хоумтаун
+        if(!(mob.in_room.area.area_flag&.tables.area_flags.hometown))
+            return false;
+        //в отключке
+        if(mob.position < .tables.position_table.rest)
+            return false;
+        //дерусь
+        if(mob.fighting!=null)
+            return false;
+        //никого нет
+        if(mob.in_room.ppl.size()<=1)
+            return false;
+        //уже раговариваю
+        if(mob.talktask != null 
+            && mob.talktask.thread!=null 
+            && mob.talktask.thread.running)
+            return false;
+
+        var ppl;
+        ppl = .List();
+
         for (ch in mob.in_room.ppl) {
-            if(mob.talktask != null 
-                && mob.talktask.thread!=null 
-                && mob.talktask.thread.running) 
-                break;
-
-            if(ch.is_npc()) continue;
-
-            var list; 
-            list = .List().add("Привет раз.","Привет два.","Привет три.");
+            //с этими не разговариваю
+            if(ch.is_npc() || ch.is_immortal()) continue;
             
-            mob.talktask = .tmp.cityguards.TalkTask(list, mob, ch);
-            mob.talktask.thread.start();
+            ppl.push_back(ch);
         }
+        //не с кем разговаривать
+        if(ppl.size()==0)
+            return false;
+        //не свезло
+        if(.number_percent()<95)
+            return false;
+
+        do_spam(mob, ppl.random());
+
     };
 
-    /* .get_mob_index(1112).onSpec = function(mob) {
+    do_spam = function(mob, ch) {
+        var phrase_list; 
+        phrase_list = .List().add("Я Вас знаю?");
+        if(ch.hometown.areaname==mob.in_room.areaname) {
+            phrase_list.push_back("Ну ладно, мой друг. Я попытаюсь вспомнить.");
+            //interpret( ch, "smile");
+        } else {
+            phrase_list.push_back("Я не знаю тебя. Уходи прочь!");
+        }
+        mob.talktask = .tmp.cityguards.TalkTask(phrase_list, mob, ch);
+        mob.talktask.thread.start();
+    };
+    .get_mob_index(1112).onSpec = function(mob) {
         .tmp.cityguards.OnSpec(mob);
-    }; */
+    };
+    
+    
     /* $C1, отдавая воинские почести, салютет $O1. 
     $C1 выкинул $O1 из ножен, салютуя.*/
 })
