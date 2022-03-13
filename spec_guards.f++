@@ -1,4 +1,3 @@
-
 .apply(function(){
     //проверка наличия используемых функций
     if(.tmp.quest==null 
@@ -12,20 +11,18 @@
 
     this = .tmp.cityguards;
 
-    TalkTask = function(list, mob, ch) {
+    TalkTask = function(mob, ch) {
         this = .Map();
 		
 		this.mob = mob;
 		this.ch = ch;
-		this.list = list;
 		
 		thread = .scheduler.Thread(function(this) {
 			try {
-				run();
+                run();
 			} catch (e) {
                 if(e == "sleep: ch left the room" || e == "sleep: someone is dead") {
                     // персонаж ушел, или кто-то скончался - это норма!
-                    
                     .print("cityguard.TalkTask normal: " + e);
                 } else {
                     .print("cityguard.TalkTask: " + e);
@@ -35,9 +32,14 @@
 			//cleanup();
 		}, this);
         run = function() {
-            for(phrase in list) {
-                say(phrase,1);
+            say("Я Вас знаю?",1);
+            if(ch.hometown.areaname==mob.in_room.areaname) {
+                say("Ну ладно, мой друг. Я попытаюсь вспомнить.",1);
+                social_vict("smile",1);
+            } else {
+                say("Я не знаю тебя. Уходи прочь!",1);
             }
+
             done();
         };
         cleanup = function() {
@@ -61,6 +63,10 @@
 			.tmp.quest.tell(msg, mob, ch);
 			wait(pause, mob, ch);
 		};
+        social_vict = function(social, pause) {
+            mob.interpret_cmd(social);//, ch.name);
+			wait(pause, mob, ch);
+        };
         done = function() {
             mob.talktask=null;
             //записывать оповещенных, чтоб не спамить лишний раз
@@ -110,26 +116,15 @@
         if(ppl.size()==0)
             return false;
         //не свезло
-        if(.number_percent()<95)
+        if(.number_percent()<50)
             return false;
 
-        do_spam(mob, ppl.random());
-
-    };
-
-    do_spam = function(mob, ch) {
-        var phrase_list; 
-        phrase_list = .List().add("Я Вас знаю?");
-        if(ch.hometown.areaname==mob.in_room.areaname) {
-            phrase_list.push_back("Ну ладно, мой друг. Я попытаюсь вспомнить.");
-            //interpret( ch, "smile");
-        } else {
-            phrase_list.push_back("Я не знаю тебя. Уходи прочь!");
-        }
-        mob.talktask = .tmp.cityguards.TalkTask(phrase_list, mob, ch);
+        mob.talktask = .tmp.cityguards.TalkTask(mob, ch);
         mob.talktask.thread.start();
     };
-    .get_mob_index(1112).onSpec = function(mob) {
+
+
+    .get_mob_index(601).onSpec = function(mob) {
         .tmp.cityguards.OnSpec(mob);
     };
     
