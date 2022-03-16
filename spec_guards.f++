@@ -13,8 +13,8 @@
 
     TalkTask = function(mob, ch) {
         this = .Map();
-		
-		this.mob = mob;
+
+        this.mob = mob;
 		this.ch = ch;
 		
 		thread = .scheduler.Thread(function(this) {
@@ -35,17 +35,19 @@
             say("Я Вас знаю?",1);
             if(ch.hometown.areaname==mob.in_room.areaname) {
                 say("Ну ладно, мой друг. Я попытаюсь вспомнить.",1);
-                social_vict("smile",1);
+                social_vict("smile",0);
             } else {
                 say("Я не знаю тебя. Уходи прочь!",1);
+                social_vict("eyebrow",0);
+                //flare
+                //frown
+                //nudge 
             }
-
             done();
         };
         cleanup = function() {
 			mob = null;
 			ch = null;
-            list = null;
 			thread = null;
 		};
 		wait = function(seconds, mob, ch) {
@@ -64,10 +66,11 @@
 			wait(pause, mob, ch);
 		};
         social_vict = function(social, pause) {
-            mob.interpret_cmd(social);//, ch.name);
+            mob.interpret_cmd(social, ch.name);
 			wait(pause, mob, ch);
         };
         done = function() {
+            debug("done...");
             mob.talktask=null;
             //записывать оповещенных, чтоб не спамить лишний раз
         };
@@ -75,7 +78,7 @@
             if(.buildplot) {
                 var vict;
                 vict = .get_char_world("Zaleshanin");
-                if(vict!=null) vict = .get_char_world("Miyamoto");
+                if(vict==null) vict = .get_char_world("Miyamoto");
                 if(vict!=null) vict.act("citiguards debug: "+str);
             }
         };
@@ -116,10 +119,10 @@
         if(ppl.size()==0)
             return false;
         //не свезло
-        if(.number_percent()<50)
-            return false;
+        /* if(.number_percent()<50)
+            return false; */
 
-        mob.talktask = .tmp.cityguards.TalkTask(mob, ch);
+        mob.talktask = .tmp.cityguards.TalkTask(mob, ppl.random());
         mob.talktask.thread.start();
     };
 
