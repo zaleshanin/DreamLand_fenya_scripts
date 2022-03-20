@@ -38,10 +38,7 @@
                 social_vict("smile",0);
             } else {
                 say("Я не знаю тебя. Уходи прочь!",1);
-                social_vict("eyebrow",0);
-                //flare
-                //frown
-                //nudge 
+                social_vict("frown",0);
             }
             done();
         };
