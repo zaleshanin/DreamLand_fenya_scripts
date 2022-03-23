@@ -1,4 +1,6 @@
 .apply(function(){
+    var initiator; 
+    initiator = this;
     //проверка наличия используемых функций
     if(.tmp.quest==null 
         || .tmp.quest.sleep==null
@@ -118,10 +120,7 @@
             
             //с одним и тем же разговариваем не чаще чем раз в 8 часов
             if(mob.talkativeArray!=null && mob.talkativeArray[ch.name]!=null 
-                && .current_time - mob.talkativeArray[ch.name] < 60*60*8) {
-                .get_char_world("Miyamoto").act("last talk %d seconds ago",.current_time - mob.talkativeArray[ch.name]);
-                continue;
-            }
+                && .current_time - mob.talkativeArray[ch.name] < 60*60*8) continue;
             
             ppl.push_back(ch);
         }
@@ -136,10 +135,43 @@
         mob.talktask.thread.start();
     };
 
+    Init = function(initiator) {
+        var result_list;
+        result_list = .Array();
+    
+        for( mob = .char_list; mob != null; mob = mob.next ) {
+            if(!mob.is_npc()) continue;
+            if(mob.spec_fun==null || mob.spec_fun!="spec_guard") continue;
+    
+            if(result_list[mob.in_room.areaname]==null) {
+                result_list[mob.in_room.areaname]=.List();
+            }
+            if(result_list[mob.in_room.areaname].has(mob.pIndexData.vnum)) continue;
+            result_list[mob.in_room.areaname].push_back(mob.pIndexData.vnum);
+        }
+    
+        var index, mob;
+        initiator.act("Activating talkative cityguards:");
+        for(areaname in result_list.keys) {
+            initiator.act("  "+areaname+":");
+            for(vnum in result_list[areaname]) {
+                index = .get_mob_index(vnum);
+                index.onSpec = function(mob) {
+                    .tmp.cityguards.OnSpecTalkative(mob);
+                };
 
-    /* .get_mob_index(601).onSpec = function(mob) {.tmp.cityguards.OnSpecTalkative(mob);}; */
+                mob = index.instances.at(0);
+                initiator.act("    [%d] %s",vnum,mob.name);
+            }
+        }
+    
+    };
+
+    Init(initiator);
+
+    /* .get_mob_index(3060).onSpec = function(mob) {.tmp.cityguards.OnSpecTalkative(mob);}; */
     
     
-    /* $C1, отдавая воинские почести, салютет $O1. 
-    $C1 выкинул $O1 из ножен, салютуя.*/
-})
+    /* %C1, отдавая воинские почести, салютет $O1. 
+    %C1 выкидывает %O1 из ножен, салютуя.*/
+}, this, .List())
