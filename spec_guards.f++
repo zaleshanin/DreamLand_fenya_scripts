@@ -29,10 +29,14 @@
                 } else {
                     .print("cityguard.TalkTask: " + e);
                 }
+                cleanup();
                 debug(e);
 			}
 			//cleanup();
 		}, this);
+
+        thread.name = .fmt("%s:%C1 talk %C1",ch.in_room.areaname,mob,ch);
+
         run = function() {
             say("Я Вас знаю?",1);
             if(ch.hometown.areaname==mob.in_room.areaname) {
@@ -45,9 +49,8 @@
             done();
         };
         cleanup = function() {
-			mob = null;
-			ch = null;
-			thread = null;
+            thread.stop();
+            mob.talktask = null;
 		};
 		wait = function(seconds, mob, ch) {
             .scheduler.sleep(seconds * 4);
