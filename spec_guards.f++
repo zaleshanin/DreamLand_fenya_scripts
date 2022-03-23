@@ -72,8 +72,7 @@
             mob.in_room.ppl.forEach(function(ch){
                 if(this.is_npc() && this.spec_fun=="spec_guard") {
                     if(this.talkativeArray==null)
-                        this.talkativeArray == .Array();
-                        //TODO ошибка: (похоже массив не создаётся)
+                        this.talkativeArray = .Array();
                     this.talkativeArray[ch.name] = .current_time;
                 }
             },ch);
@@ -119,7 +118,7 @@
             
             //с одним и тем же разговариваем не чаще чем раз в 8 часов
             if(mob.talkativeArray!=null && mob.talkativeArray[ch.name]!=null 
-                && .current_time - mob.talkativeArray[ch.name] > 60*60*8) {
+                && .current_time - mob.talkativeArray[ch.name] < 60*60*8) {
                 .get_char_world("Miyamoto").act("last talk %d seconds ago",.current_time - mob.talkativeArray[ch.name]);
                 continue;
             }
@@ -138,9 +137,7 @@
     };
 
 
-    /* .get_mob_index(601).onSpec = function(mob) {
-        .tmp.cityguards.OnSpecTalkative(mob);
-    }; */
+    /* .get_mob_index(601).onSpec = function(mob) {.tmp.cityguards.OnSpecTalkative(mob);}; */
     
     
     /* $C1, отдавая воинские почести, салютет $O1. 
