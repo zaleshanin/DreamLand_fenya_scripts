@@ -1,4 +1,8 @@
 .apply(function(){
+    /*
+    скрипт вешается на всех мобов имеющих spec_guard и спецгвардов Правителей 
+    v.2
+    */
     var initiator; 
     initiator = this;
     //проверка наличия используемых функций
@@ -12,6 +16,8 @@
         .tmp.cityguards = .Map();
 
     this = .tmp.cityguards;
+    //чистим старое название (удалить в версии больше 2)
+    if(OnSpecTalkative!=null) OnSpecTalkative=null;
 
     TalkTask = function(mob, ch) {
         this = .Map();
@@ -94,39 +100,85 @@
         return this;
     };
 
-    OnSpecTalkative = function(mob) {
+    SpecGuardOnSpec = function(mob) {
         this = .tmp.cityguards;
+        //очарован
+        if(mob.charmed) return false;
         //не хоумтаун
-        if(!(mob.in_room.area.area_flag&.tables.area_flags.hometown))
-            return false;
+        if(!(mob.in_room.area.area_flag&.tables.area_flags.hometown)) return false;
         //в отключке
-        if(mob.position < .tables.position_table.rest)
-            return false;
+        if(mob.position < .tables.position_table.rest) return false;
         //дерусь
-        if(mob.fighting!=null)
-            return false;
+        if(mob.fighting!=null) return false;
         //никого нет
-        if(mob.in_room.ppl.size()<=1)
-            return false;
-        //уже раговариваю
-        if(mob.talktask != null 
-            && mob.talktask.thread!=null 
-            && mob.talktask.thread.running)
-            return false;
+        if(mob.in_room.ppl.size()<=1) return false;
 
-        var ppl;
-        ppl = .List();
+        var ppl, victim, msg;
+        ppl = .List(); //список с кем поговорить
+        victim = null; //если нашли кого бить!
+        crime = ''; //чем провинился
 
         for (ch in mob.in_room.ppl) {
-            //с этими не разговариваю
+            //с этими не связываюсь
             if(ch.is_npc() || ch.is_immortal()) continue;
+            //этого не вижу
+            if(!mob.can_see_mob(ch)) continue;
             
+            if(.isset_bit(ch.act, .tables.plr_flags.wanted) || ch.isAffected("jail")) {
+                victim = ch;
+                crime = ', ПРЕСТУПНИК';
+                break;
+            }
+            if(ch.fighting!=null) {
+                if(ch.fighting.getClan()=="RULER" //с рулерами драться не надо
+                    || ch.getClan()=="CHAOS" // хаоситам драться не надо
+                    || ch.clan.diplomacy(.Clan("ruler") == "war" //врагам рулеров не драться
+                    || ch.fighting.isAffected("manacles")) // закованных в кандалы не бить
+                    || (ch.hometown.areaname!=mob.in_room.areaname 
+                        && mob.in_room.areaname==ch.fighting.hometown.areaname) //по прописке
+                    || (ch.alignName!=mob.alignName 
+                        && mob.alignName==ch.fighting.alignName) //по алигну
+                ) {
+                    victim = ch;
+                    break;
+                } else {
+                    //чтоб  не пылиться, помогу кому-нибудь!
+                    victim = .List().add(ch, ch.fighting).random();
+                }
+                
+            }
+
             //с одним и тем же разговариваем не чаще чем раз в 8 часов
             if(mob.talkativeArray!=null && mob.talkativeArray[ch.name]!=null 
                 && .current_time - mob.talkativeArray[ch.name] < 60*60*8) continue;
             
             ppl.push_back(ch);
         }
+
+        if(crime!='') {
+            //TODO перенести в onGreet
+            mob.setClan("RULER");
+            mob.interpret_raw("cb", .fmt("ВНИМАНИЕ!!! %1$^C1 находится в месте под названием %2$s в районе %3$s.", victim, victim.in_room.name, victim.in_room.areaname));
+        }
+        if(victim!=null) {
+            if(!mob.is_safe(victim) //если не защищают боги
+                && ((mob.getModifyLevel()+8 > victim.getModifyLevel()) //совладаем по уровню
+                    || (victim.fighting!=null && victim.fighting!=mob)) //или кому-то помогаем
+                ) {
+                mob.interpret_raw("yell", .fmt("%1$^C1%2$s! ЗАЩИЩАЙ НЕВИННЫХ!! СМЕРТЬ ПРЕСТУПНИКАМ!!", victim, crime));
+                mob.multi_hit(victim);
+            } else {
+                mob.recho("%1$^C1 кричит '%2$^C1! ТЫ ЕЩЕ ОТВЕТИШЬ ЗА СВОИ ПРЕСТУПЛЕНИЯ!'",mob, victim);
+            }
+            return true;
+        }
+
+        //уже раговариваю
+        if(mob.talktask != null 
+            && mob.talktask.thread!=null 
+            && mob.talktask.thread.running)
+            return false;
+
         //не с кем разговаривать
         if(ppl.size()==0)
             return false;
