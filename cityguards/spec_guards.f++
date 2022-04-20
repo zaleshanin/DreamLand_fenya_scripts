@@ -16,8 +16,6 @@
         .tmp.cityguards = .Map();
 
     this = .tmp.cityguards;
-    //чистим старое название (удалить в версии больше 2)
-    if(OnSpecTalkative!=null) OnSpecTalkative=null;
 
     TalkTask = function(mob, ch) {
         this = .Map();
@@ -132,8 +130,8 @@
             if(ch.fighting!=null) {
                 if(ch.fighting.getClan()=="RULER" //с рулерами драться не надо
                     || ch.getClan()=="CHAOS" // хаоситам драться не надо
-                    || ch.clan.diplomacy(.Clan("ruler") == "war" //врагам рулеров не драться
-                    || ch.fighting.isAffected("manacles")) // закованных в кандалы не бить
+                    || (!ch.is_npc() && ch.clan.diplomacy(.Clan("ruler")) == "war") //врагам рулеров не драться
+                    || ch.fighting.isAffected("manacles") // закованных в кандалы не бить
                     || (!ch.fighting.is_npc() && ch.hometown.areaname!=mob.in_room.areaname 
                         && mob.in_room.areaname==ch.fighting.hometown.areaname) //по прописке
                     || (ch.alignName!=mob.alignName 
@@ -194,6 +192,7 @@
         var result_list;
         result_list = .Array();
     
+        
         for( mob = .char_list; mob != null; mob = mob.next ) {
             if(!mob.is_npc()) continue;
             if(mob.spec_fun==null || mob.spec_fun!="spec_guard") continue;
@@ -212,7 +211,7 @@
             for(vnum in result_list[areaname]) {
                 index = .get_mob_index(vnum);
                 index.onSpec = function(mob) {
-                    .tmp.cityguards.OnSpecTalkative(mob);
+                    .tmp.cityguards.SpecGuardOnSpec(mob);
                 };
 
                 mob = index.instances.at(0);
