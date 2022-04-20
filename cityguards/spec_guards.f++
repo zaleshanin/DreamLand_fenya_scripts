@@ -134,7 +134,7 @@
                     || ch.getClan()=="CHAOS" // хаоситам драться не надо
                     || ch.clan.diplomacy(.Clan("ruler") == "war" //врагам рулеров не драться
                     || ch.fighting.isAffected("manacles")) // закованных в кандалы не бить
-                    || (ch.hometown.areaname!=mob.in_room.areaname 
+                    || (!ch.fighting.is_npc() && ch.hometown.areaname!=mob.in_room.areaname 
                         && mob.in_room.areaname==ch.fighting.hometown.areaname) //по прописке
                     || (ch.alignName!=mob.alignName 
                         && mob.alignName==ch.fighting.alignName) //по алигну
