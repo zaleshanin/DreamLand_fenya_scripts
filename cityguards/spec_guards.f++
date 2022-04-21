@@ -153,7 +153,7 @@
                         && mob.in_room.areaname==ch.fighting.hometown.areaname) //по прописке
                     || (ch.alignName!=mob.alignName 
                         && mob.alignName==ch.fighting.alignName) //по алигну
-                    || isSpecMob(ch.fighting) //спецмобу
+                    || isSpecMob(ch.fighting) //спецмоба бьют
                 ) {
                     victim = ch;
                     break;
@@ -189,6 +189,9 @@
             return true;
         }
 
+        if(mob.spec_fun==null || mob.spec_fun!="spec_guard") 
+            return false;
+
         //уже раговариваю
         if(mob.talktask != null 
             && mob.talktask.thread!=null 
@@ -221,6 +224,8 @@
             if(result_list[mob.in_room.areaname].has(mob.pIndexData.vnum)) continue;
             result_list[mob.in_room.areaname].push_back(mob.pIndexData.vnum);
         }
+        //не spec_fun==spec_guards
+        result_list['Дворец Правителей']=.List().add(11); // спецгвард правителей
     
         var index, mob;
         initiator.act("Activating talkative cityguards:");
