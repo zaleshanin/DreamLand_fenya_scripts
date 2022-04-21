@@ -98,6 +98,23 @@
         return this;
     };
 
+    isSpecMob = function (ch) {
+
+        if (!ch.is_npc()) 
+            return false;
+
+        if (ch.hasOccupation("shopper") || ch.hasOccupation("practicer")
+            || ch.hasOccupation("repairman") || ch.hasOccupation("quest_trader")
+            || ch.hasOccupation("healer") || ch.hasOccupation("smithman")
+            || ch.hasOccupation("trainer") || ch.hasOccupation("trainer")
+            || (ch.spec_fun != null && (ch.spec_fun == "spec_guard"
+                || ch.spec_fun == "spec_patrolman" || ch.spec_fun == "spec_executioner" 
+                || ch.spec_fun == "spec_mayor" || ch.spec_fun == "spec_captain"))) {
+            return true;
+        }
+        return false;
+    };
+
     SpecGuardOnSpec = function(mob) {
         this = .tmp.cityguards;
         //очарован
@@ -136,11 +153,12 @@
                         && mob.in_room.areaname==ch.fighting.hometown.areaname) //по прописке
                     || (ch.alignName!=mob.alignName 
                         && mob.alignName==ch.fighting.alignName) //по алигну
+                    || isSpecMob(ch.fighting) //спецмобу
                 ) {
                     victim = ch;
                     break;
                 } else {
-                    //чтоб  не пылиться, помогу кому-нибудь!
+                    //чтоб  не пылиться, помогу кому-нибудь, если не найду кого получше
                     victim = .List().add(ch, ch.fighting).random();
                 }
                 
