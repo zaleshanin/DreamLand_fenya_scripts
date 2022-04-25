@@ -115,6 +115,33 @@
         return false;
     };
 
+    checkVictim = function(mob, ch) {
+        //хаоситам ни с кем драться нельзя
+        if(ch.getClan()=="CHAOS") return true;
+        //врагам рулеров не драться
+        if(ch.clan.diplomacy(.Clan("ruler")) == "war") return true;
+        
+        if(ch.fighting.is_npc()) {
+            //защищаем спецмобов
+            if(isSpecMob(ch.fighting)) return true;
+        } else {
+            //с рулерами драться не надо
+            if(ch.fighting.getClan()=="RULER") return true;
+            // закованных в кандалы не бить
+            if(ch.fighting.isAffected("manacles")) return true;
+            //по прописке
+            if(ch.hometown.areaname!=mob.in_room.areaname 
+                && mob.in_room.areaname==ch.fighting.hometown.areaname)
+                return true;
+        }
+        //по алигну
+        if(ch.alignName!=mob.alignName 
+            && mob.alignName==ch.fighting.alignName)
+            return true;
+
+        return false;
+    };
+
     SpecGuardOnSpec = function(mob) {
         this = .tmp.cityguards;
         //очарован
@@ -144,24 +171,9 @@
                 crime = ', ПРЕСТУПНИК';
                 break;
             }
-            if(ch.fighting!=null) {
-                if(ch.fighting.getClan()=="RULER" //с рулерами драться не надо
-                    || ch.getClan()=="CHAOS" // хаоситам драться не надо
-                    || (!ch.is_npc() && ch.clan.diplomacy(.Clan("ruler")) == "war") //врагам рулеров не драться
-                    || ch.fighting.isAffected("manacles") // закованных в кандалы не бить
-                    || (!ch.fighting.is_npc() && ch.hometown.areaname!=mob.in_room.areaname 
-                        && mob.in_room.areaname==ch.fighting.hometown.areaname) //по прописке
-                    || (ch.alignName!=mob.alignName 
-                        && mob.alignName==ch.fighting.alignName) //по алигну
-                    || isSpecMob(ch.fighting) //спецмоба бьют
-                ) {
-                    victim = ch;
-                    break;
-                } else {
-                    //чтоб  не пылиться, помогу кому-нибудь, если не найду кого получше
-                    victim = .List().add(ch, ch.fighting).random();
-                }
-                
+            if(ch.fighting!=null && checkVictim(mob, ch)) {
+                victim = ch;
+                break;
             }
 
             //с одним и тем же разговариваем не чаще чем раз в 8 часов
