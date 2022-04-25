@@ -118,8 +118,10 @@
     checkVictim = function(mob, ch) {
         //хаоситам ни с кем драться нельзя
         if(ch.getClan()=="CHAOS") return true;
-        //врагам рулеров не драться
+        //врагам рулеров драться нельзя
         if(ch.clan.diplomacy(.Clan("ruler")) == "war") return true;
+        //беглым и в розыске драться нельзя
+        if(.isset_bit(ch.act, .tables.plr_flags.wanted) || ch.isAffected("jail")) return true;
         
         if(ch.fighting.is_npc()) {
             //защищаем спецмобов
@@ -127,8 +129,15 @@
         } else {
             //с рулерами драться не надо
             if(ch.fighting.getClan()=="RULER") return true;
+            //хаоситов бить можно
+            if(ch.fighting.getClan()=="CHAOS") return false;
             // закованных в кандалы не бить
             if(ch.fighting.isAffected("manacles")) return true;
+            //врагов рулеров бить можно
+            if(ch.fighting.clan.diplomacy(.Clan("ruler")) == "war") return false;
+            //этих бить тоже можно
+            if(.isset_bit(ch.fighting.act, .tables.plr_flags.wanted) 
+                || ch.fighting.isAffected("jail")) return false;
             //по прописке
             if(ch.hometown.areaname!=mob.in_room.areaname 
                 && mob.in_room.areaname==ch.fighting.hometown.areaname)
