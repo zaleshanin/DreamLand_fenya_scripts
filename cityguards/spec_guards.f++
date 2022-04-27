@@ -126,6 +126,8 @@
         if(ch.fighting.is_npc()) {
             //защищаем спецмобов
             if(isSpecMob(ch.fighting)) return true;
+            //не защищаем квестовых мобов
+            if(ch.fighting.hasDestiny) return false;
         } else {
             //с рулерами драться не надо
             if(ch.fighting.getClan()=="RULER") return true;
