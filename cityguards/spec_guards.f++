@@ -267,7 +267,6 @@
 
     Init(initiator);
 
-    /* .get_mob_index(3060).onSpec = function(mob) {.tmp.cityguards.OnSpecTalkative(mob);}; */
     
     
     /* %C1, отдавая воинские почести, салютет $O1. 
