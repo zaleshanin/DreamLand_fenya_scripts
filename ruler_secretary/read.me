@@ -50,3 +50,59 @@
 макс.штраф:
 вонтед: да/нет
 казнь: да/нет
+//--------------//
+mob.task.criminal - подсудимый
+    char - ссылка на персонажа
+    id
+    name
+    runame
+    sex
+    race
+    pretitle
+    title
+    remort_count
+    clan
+
+mob.task.crimes - статьи закона
+mob.task.crimes[key].victims - потерпевшие
+mob.task.place - место преступления
+mob.task.punishment - наказание
+//--------------//
+archive
+.Array[номер дела]
+    .Map()
+        date = .Map()
+            world_time = .world_time
+            name = .date()
+        ruler = .Map() 
+            id - id судьи
+            name - "строка" судьи
+        criminal = .Map() 
+            id - id осужденного
+            name - "строка" осужденного
+        crimes = .Array() - статьи закона
+        victim = "строка" потерпевшие
+        place = "строка" место преступления
+        .Array() - наказания
+        punishment = .Array(), key - тип наказания, value - строка или boolean
+//--------------//
+criminals[id]
+    name
+    runame
+    race
+    remort
+//--------------//
+case personal
+    list - список дел (case ###)
+    case ###
+//--------------//
+case ###
+    crimenote
+    crimepattern
+//--------------//
+ruler's book
+    crimelist
+    criminals
+    rulers
+    notes
+
