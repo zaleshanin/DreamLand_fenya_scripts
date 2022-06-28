@@ -3,10 +3,15 @@
         .tmp.ruler = .Map();
 
     //прототип дела
-    //Case = .get_obj_index();
+    Case = .get_obj_index(4287);
+    if(.buildplot) Case = .get_obj_index(3015); //лист бумаги
 
     //прототип папки
-    //File = .get_obj_index();
+    File = .get_obj_index(4288);
+    if(.buildplot) File = .get_obj_index(732); //некрономикон
+
+    RulerBook = .get_obj_index(4289);
+    if(.buildplot) RulerBook = .get_obj_index(3016); //записная книжка
 
     /*
     Case - уголовное дело. Объект типа parchment. Имеет уникальный номер.
