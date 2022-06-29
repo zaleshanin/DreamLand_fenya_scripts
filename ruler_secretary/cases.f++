@@ -1,55 +1,72 @@
 .apply(function(){
     if(.tmp.ruler==null) 
         .tmp.ruler = .Map();
+    if(.tmp.ruler.case==null) 
+        .tmp.ruler.case = .Map();
+
+    this = .tmp.ruler.case;
 
     //прототип дела
     Case = .get_obj_index(4287);
     if(.buildplot) Case = .get_obj_index(3015); //лист бумаги
 
-    //прототип папки
-    File = .get_obj_index(4288);
-    if(.buildplot) File = .get_obj_index(732); //некрономикон
+    Case.onExtraDescr = function(case, ch, str) {
+        this = .tmp.ruler;
 
-    RulerBook = .get_obj_index(4289);
-    if(.buildplot) RulerBook = .get_obj_index(3016); //записная книжка
+        //смотрим на case.name
+
+        
+    };
+
+    Init = function(num) {
+        var objCase, case, char;
+        case = .tmp.ruler.archive[num];
+        char = .tmp.ruler.criminals[ case.criminal.id ];
+        objCase = Case.create();
+
+        objCase.number = num;
+
+        objCase.name = .fmt(
+            "%s %d %s %N1", 
+            objCase.name, 
+            num,
+            char.name,
+            char.runame
+        );
+
+        var clan_color;
+        clan_color="";
+        if(case.criminal.clan!=null) {
+            if(case.criminal.clan.name!="none")
+                clan_color = "{" + case.criminal.clan.color;
+        }
+        var crimes;
+        crimes = "";
+        for(key in case.crimes.keys) {
+            if(crimes!="") crimes=crimes+", ";
+            crimes=crimes+key;
+        }
+        objCase.short_descr = .fmt(
+            "%s номер %d: '{1{W({M%d{W){x{2 {1%s%N1{x{2 (%s)'",
+            objCase.short_descr,
+            num,
+            char.remort_count,
+            clan_color,
+            char.runame,
+            crimes
+        );
+
+        return objCase;
+    };
 
     /*
     Case - уголовное дело. Объект типа parchment. Имеет уникальный номер.
-
-    File - личное дело. Объект типа контейнер. Имеет уникальное Id персонажа. Хранит в себе уголовные дела на персонажа. "Личное дело сатира (1) Залешанина." 
 
     Case.onExtraDescr(obj, ch, str)
         "case ###" - выводит тоже самое что crimenote
         "case crimenote" - рулеру выводит заполненный crime 
             (crime subj ..., crime to ..., crime + ...)
         "case template" - заполненный crime для вставки через web edit
-    
-    File.onExtraDescr(obj, ch, str)
-        "###" - номер дела в папке - тот же вывод что и Case.onExtraDescr()
-        "list" - список дел заведенных на персонажа
     */
 
-    /*
-    Реестр дел:
-        - список преступников по именам
-            (5) Миямото
-            (4) Миямото
-                Миямото
-                Залешанин
-        - список по пунктам закона
-            2.1.1 Приченение вреда на охраняемой территории
-                Миямото     Руфина  Тодомори    Вольфрам
-                Залешанин   Тахи    Такеши
-            2.2.2 ...
-        - преступники по пункту закона
-            2.1.1 Приченение вреда на охраняемой территории
-                (дата/год) (###) Миямото
-                (дата/год) (###) Руфина
-                ...
-        - список по имени
-            (1) сатир Залешанин
-                номер дела, дата/год(???), пункт закона, наказание
-            (2) ...
-
-    */
 })
