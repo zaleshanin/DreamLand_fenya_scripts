@@ -1,0 +1,52 @@
+.apply(function(){
+    if(.tmp.ruler==null) 
+        .tmp.ruler = .Map();
+    if(.tmp.ruler.file==null) 
+        .tmp.ruler.file = .Map();
+
+    this = .tmp.ruler.file;
+
+    //прототип папки
+    File = .get_obj_index(4288);
+    if(.buildplot) File = .get_obj_index(732); //некрономикон
+
+    File.onExtraDescr = function(file, ch, str) {
+        this = .tmp.ruler;
+
+        //смотрим на file.name
+
+        
+    };
+
+    Init = function(id) {
+        var file, char;
+        char = .tmp.ruler.criminals[ id ];
+        file = File.create();
+
+        file.criminal = id;
+        file.name = .fmt(
+            "%s %s %N1", 
+            file.name, 
+            char.name,
+            char.runame
+        );
+        file.short_descr = .fmt(
+            "%s (%d) %N2 %N2",
+            file.short_descr,
+            char.remort_count,
+            char.race,
+            char.runame
+        );
+
+        return file;
+    }
+
+    /*
+     File - личное дело. Объект типа контейнер. Имеет уникальное Id персонажа. Хранит в себе уголовные дела на персонажа. "Личное дело сатира (1) Залешанина." 
+
+ 
+    File.onExtraDescr(obj, ch, str)
+        "###" - номер дела в папке - тот же вывод что и Case.onExtraDescr()
+        "list" - список дел заведенных на персонажа
+    */
+})

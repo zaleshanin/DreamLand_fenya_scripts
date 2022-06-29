@@ -1,0 +1,51 @@
+.apply(function(){
+    if(.tmp.ruler==null) 
+        .tmp.ruler = .Map();
+    if(.tmp.ruler.book==null) 
+        .tmp.ruler.book = .Map();
+
+    this = .tmp.ruler.book;
+
+    RulerBook = .get_obj_index(4289);
+    if(.buildplot) RulerBook = .get_obj_index(3016); //записная книжка
+
+    Init = function(ruler) {
+        var book;
+        
+        book = RulerBook.create();
+
+        book.ruler = ruler.name;
+        book.name = .fmt(
+            "%s %s %N1", 
+            book.name, 
+            ruler.name,
+            ruler.runame
+        );
+
+        return book;
+    }
+
+    /*
+    Реестр дел:
+        - список преступников по именам
+            (5) Миямото
+            (4) Миямото
+                Миямото
+                Залешанин
+        - список по пунктам закона
+            2.1.1 Приченение вреда на охраняемой территории
+                Миямото     Руфина  Тодомори    Вольфрам
+                Залешанин   Тахи    Такеши
+            2.2.2 ...
+        - преступники по пункту закона
+            2.1.1 Приченение вреда на охраняемой территории
+                (дата/год) (###) Миямото
+                (дата/год) (###) Руфина
+                ...
+        - список по имени
+            (1) сатир Залешанин
+                номер дела, дата/год(???), пункт закона, наказание
+            (2) ...
+
+    */
+})
