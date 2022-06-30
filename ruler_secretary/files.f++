@@ -106,7 +106,7 @@
             char.runame
         );
         file.short_descr = .fmt(
-            "%s (%d) %N2 %N2",
+            "%s {1{W({M%d{W){x{2 %N2 %N2",
             file.short_descr,
             char.remort_count,
             char.race,
