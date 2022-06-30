@@ -55,7 +55,7 @@
                 return true;
             }
         }
- */
+        */
     };
     File.onPut = function(book, ch, obj, cont) {
         //onPut(ch,obj,cont) - ch кладет obj в контейнер cont.
@@ -84,7 +84,7 @@
 
         } */
     };
-    Necronomicon.onFetch = function(book,ch,obj) {
+    File.onFetch = function(book,ch,obj) {
         //onFetch(ch,obj) - ch вынул obj из этого предмета-контейнера
         //если бумажек внутри не осталось, перестаём вибрировать
         /* if(book.items.size()==0) {
@@ -92,8 +92,6 @@
             ch.in_room.ppl.call.act('%1$^O1 перестаёт вибрировать.', book);
         } */
     };
-
-
 
     Init = function(id) {
         var file, char;
