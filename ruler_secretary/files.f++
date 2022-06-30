@@ -17,6 +17,83 @@
 
         
     };
+    File.onCantFetch = function(book, ch, unknownobj, unknownstr) {
+        //onCantFetch(ch) - чар ch пытается что-то вытащить из этого контейнера.
+        // если вернуть true - вытащить не получится.
+        /* if(ch.clan.name != "ruler") {
+            ch.act('Что-то мешает тебе достать хоть что-нибудь из %1$O2.', book);
+            return true;
+        }
+        return false; */
+    };
+    File.onCantPut = function(book, ch, obj, pocket, verbose) {
+        //onCantPut(ch, obj, pocket, verbose) - чар ch пытается положить предмет obj
+        // в этот контейнер (возможно в карман с именем pocket).
+        // если вернуть true - положить не получится.
+        // параметр verbose задает, надо ли выводить чару сообщения о неудаче.
+        // например, при "put all.something container" - спамить при попытке класть каждый
+        // предмет не нужно, и verbose будет равно false.
+
+        /* if(obj.epidemy==null) {
+            if(verbose)
+                ch.act('Не похоже что ты можешь хранить %1$O4 в %2$O6.',obj,book);
+            return true;
+        } else {
+            if(obj.epidemy.ownerName!=book.epidemy.ownerName) {
+                if(verbose)
+                    ch.act('Не похоже что %1$O1 фрагмент из этой книги.',obj);
+                return true;
+            } else {
+                return false;
+            }
+        } */
+    };
+    File.onPutMsg = function(book, ch, obj, container){
+        /* if(book==obj) {
+            if(book.epidemy!=null && book.epidemy.ownerName!=ch.name) {
+                //в onPut не даём положить книгу в контейнер, если не твоя книга
+                return true;
+            }
+        }
+ */
+    };
+    File.onPut = function(book, ch, obj, cont) {
+        //onPut(ch,obj,cont) - ch кладет obj в контейнер cont.
+        // Триггер вызывается для всех троих.
+        //начинает вибрировать если в нее положить бумажку
+		/* this = .tmp.epidemy;
+		if(book==obj && book.epidemy!=null && book.epidemy.ownerName!=ch.name) {
+		    book.obj_to_char(ch);
+		    ch.act("Ты не можешь хранить %O4 в %O6.",book,cont);
+			necronomiconNotOwnerCheck(book,ch);
+            return;
+        }
+		if(book!=cont) return;
+        if(!(book.extra_flags&.tables.extra_flags.hum)) {
+            book.extra_flags = .set_bit(book.extra_flags, .tables.extra_flags.hum);
+            ch.in_room.ppl.call.act('%1$^O1 начинает вибрировать.',book);
+        }
+        if(obj.epidemy.spellIndexMin==0 && obj.epidemy.spellIndexMax==4) {
+            ch.act('По разрыву пробегает фиолетовый огонь, и он изчезает...\n' +
+                '%1$O1 становится частью страницы книги.', obj);
+            ch.in_room.ppl.call.act('%1$^O1 вспыхивает магическим огнём.',book);
+            book.extra_flags = .set_bit(book.extra_flags, .tables.extra_flags.glow);
+            book.epidemy.isLorem = 1;
+            obj.clear();
+            obj.extract(true);
+
+        } */
+    };
+    Necronomicon.onFetch = function(book,ch,obj) {
+        //onFetch(ch,obj) - ch вынул obj из этого предмета-контейнера
+        //если бумажек внутри не осталось, перестаём вибрировать
+        /* if(book.items.size()==0) {
+            book.extra_flags = .unset_bit(book.extra_flags, .tables.extra_flags.hum);
+            ch.in_room.ppl.call.act('%1$^O1 перестаёт вибрировать.', book);
+        } */
+    };
+
+
 
     Init = function(id) {
         var file, char;
@@ -39,7 +116,7 @@
         );
 
         return file;
-    }
+    };
 
     /*
      File - личное дело. Объект типа контейнер. Имеет уникальное Id персонажа. Хранит в себе уголовные дела на персонажа. "Личное дело сатира (1) Залешанина." 
