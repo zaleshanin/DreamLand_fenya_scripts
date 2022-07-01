@@ -13,9 +13,38 @@
     Case.onExtraDescr = function(case, ch, str) {
         this = .tmp.ruler;
 
-        //смотрим на case.name
+        if ( archive == null 
+            || archive[case.number] == null
+            || crimesToString == null 
+            || punishmentToString == null ) 
+            return '';
 
-        
+        var result;
+        result = '';
+
+        var case_map;
+        case_map = .tmp.ruler.archive[case.number];       
+
+        //смотрим на case.name
+        if(str.is_name(case.name)) {
+
+            result = .fmt("{x Дата:          {c%1$s\n"
+                + "{x Осужденный:    {1%2$s{2\n"
+                + "{x Место:         {c%3$s{x\n",
+                case_map.date.name,
+                case_map.criminal.name,
+                case_map.place
+            );
+            //TODO заменить на свой формат
+            //TODO вызывать для каждого crime in crimes отдельно
+            result = result + .fmt("{x Преступление:  {c%s{x\n", crimesToString(case_map.crimes)).format(80);
+ 
+            result = result + .fmt("{x Наказание:     {1%s{2.\n",punishmentToString(case_map.punishment)).format(80);
+
+            result = result + .fmt("{x Судья:         {1%s{2\n", case_map.ruler);
+        }
+
+        return result;
     };
 
     Init = function(num) {
