@@ -37,6 +37,11 @@
             );
             //TODO заменить на свой формат
             //TODO вызывать для каждого crime in crimes отдельно
+            //TODO по каждому крайм:
+            /*
+            Престуление:   ...
+            Потерпевший:   ...
+            */
             result = result + .fmt("{x Преступление:  {c%s{x\n", crimesToString(case_map.crimes)).format(80);
  
             result = result + .fmt("{x Наказание:     {1%s{2.\n",punishmentToString(case_map.punishment)).format(80);
