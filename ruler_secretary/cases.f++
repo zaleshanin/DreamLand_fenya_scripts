@@ -38,11 +38,18 @@
             //TODO заменить на свой формат
             //TODO вызывать для каждого crime in crimes отдельно
             //TODO по каждому крайм:
+            for(crime in case_map.crimes.values) {
+                result = result + .fmt("{x Преступление:  {c%s{x\n", 
+                    .tmp.ruler.crimeToString(crime));
+                if(crime.victims!=null) {
+                    result = result + .tmp.ruler.victimsToString(crime, "{x %^s:  {x%s{x\n");
+                }
+            }
             /*
             Престуление:   ...
             Потерпевший:   ...
             */
-            result = result + .fmt("{x Преступление:  {c%s{x\n", crimesToString(case_map.crimes)).format(80);
+            //result = result + .fmt("{x Преступление:  {c%s{x\n", crimesToString(case_map.crimes)).format(80);
  
             result = result + .fmt("{x Наказание:     {1%s{2.\n",punishmentToString(case_map.punishment)).format(80);
 

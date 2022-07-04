@@ -7,38 +7,43 @@
 		var result;
 		result = '';
 
-		result = result + crime.number + ". " + .tmp.ruler.Crimes[crime.number].name;
-		if(.tmp.ruler.Crimes[crime.number].victim!='' && crimes[crime.number].victims!=null) {
-			var victims_str;
-			victims_str = '';
-			if(.tmp.ruler.Crimes[crime.number].victim=='npc') {
-				victims_str = crimes[crime.number].victims;
-				if(crimes[crime.number].victims.match('.*, .*')) 
-					result = result + ", потерпевшие: "+victims_str;
-				else
-					result = result + ", потерпевший "+victims_str;
-			} else {
-				for(victim in crimes[crime.number].victims) {
-					if(victims_str!='') victims_str = victims_str + ', ';
-					victims_str = .fmt("%s%^s",victims_str,victim); 
-				}
-				if(crimes[crime.number].victims.size()>1)
-					result = result + ", потерпевшие: "+victims_str;
-				else 
-					result = result + ", потерпевший "+victims_str;
-			}
-		}
+		result = result + crime.number + ". " 
+			+ .tmp.ruler.Crimes[crime.number].name;
+
 		return result;
 	};
-	.tmp.ruler.crimesToString = function(crimes) {
-		var mob_msg;//, item_msg;
-		mob_msg = '';// item_msg = "пункту";
-		for(crime in crimes.values) {
-			if(mob_msg!='') {
-				mob_msg = mob_msg+", ";
-				//item_msg = "пунктам";
+	.tmp.ruler.victimsToString = function(crime, pattern) {
+		var victim_str, victim_val; victim_str = ''; victim_val = ''; 
+		if(.tmp.ruler.Crimes[crime.number].victim=='npc') {
+			victim_val = crime.victims;
+			if(crime.victims.match('.*, .*')) 
+				victim_str = "потерпевшие";
+			else
+				victim_str = "потерпевший";
+		} else {
+			for(victim in crime.victims) {
+				if(victim_val!='') victim_val = victim_val + ', ';
+				victim_val = .fmt("%s%^s", victim_val, victim); 
 			}
-			mob_msg = mob_msg + crimeToString(crime);
+			if(crime.victims.size()>1)
+				victim_str = "потерпевшие";
+			else 
+				victim_str = "потерпевший";
+		}
+		return .fmt(pattern, victim_str, victim_val);
+	};
+	.tmp.ruler.crimesToString = function(crimes) {
+		var mob_msg;
+		mob_msg = '';
+		for(crime in crimes.values) {
+			if( mob_msg != '' ) {
+				mob_msg = mob_msg + ", ";
+			}
+			
+			mob_msg = .fmt("%1$s %2$s", 
+				mob_msg, 
+				crimeToString(crime) + victimsToString("%s: %s", crime)
+			);
 		}
 		return mob_msg;
 	};
