@@ -105,12 +105,21 @@
             char.name,
             char.runame
         );
+        var remort_str;
+        remort_str='';
+        if(char.remort_count)
+            remort_str = .fmt("{W({M%d{W){x ", char.remort_count);
+        var chname;
+        chname = char.name;
+        if(char.runame)
+            chname = char.runame;
+
         file.short_descr = .fmt(
-            "%s {1{W({M%d{W){x{2 %N2 %N2",
+            "%s {1%s{2%N2 %N2",
             file.short_descr,
-            char.remort_count,
+            remort_str,
             char.race,
-            char.runame
+            chname
         );
 
         return file;

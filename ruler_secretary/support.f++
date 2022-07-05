@@ -2,7 +2,7 @@
 	if(.tmp.ruler==null)
 		.tmp.ruler = .Map();
 
-    	// suport functions
+    // suport functions
 	.tmp.ruler.crimeToString = function(crime) {
 		var result;
 		result = '';
@@ -33,21 +33,25 @@
 		return .fmt(pattern, victim_str, victim_val);
 	};
 	.tmp.ruler.crimesToString = function(crimes) {
-		var mob_msg;
+		var mob_msg, crime_str;
 		mob_msg = '';
 		for(crime in crimes.values) {
 			if( mob_msg != '' ) {
 				mob_msg = mob_msg + ", ";
 			}
 			
+            crime_str = crimeToString(crime);
+            
+            if(crime.victims!=null)
+                crime_str=crime_str + victimsToString(crime, "%s: %s");
+
 			mob_msg = .fmt("%1$s %2$s", 
 				mob_msg, 
-				crimeToString(crime) + victimsToString("%s: %s", crime)
+				crime_str
 			);
 		}
 		return mob_msg;
 	};
-
 	.tmp.ruler.punishmentToString = function(punishArray){
 		var msg; msg='';
 		for(key in punishArray.keys) {
@@ -66,6 +70,59 @@
 		}
 		return msg;
 	};
+    .tmp.ruler.formatToList = function(str, limit) {
+        var list, word, line_list, tmp_str, strip_word, strip_str, result;
+        tmp_str = ''; strip_str = '';
+        
+        result = .List();
+        line_list = .List();
+
+        str = str.replace("  ", " ");
+        list = str.split(" ");
+        for(iWord in list) {
+            word = iWord.trim();
+            strip_word = word.stripColour();
+            if(strip_str!='') {
+                strip_str = strip_str + ' ';
+            }
+            
+            if( strip_str.size() + strip_word.size() <= limit ) {
+                strip_str = strip_str + strip_word;
+                line_list.push_back(word);
+            } else {
+                strip_str = strip_str.trim();
+
+                var line_size, spaces, double, spaces_between_us;
+                line_size = line_list.size(); 
+                spaces = limit - (strip_str.size()); 
+                double = spaces / (line_size - 1);
+                spaces = spaces % (line_size - 1);
+                var i;
+                for( i = 1; i <= spaces; i = i + 1 ) {
+                    spaces_between_us = double * 1 + 2;
+                    tmp_str = .fmt("%s%"+spaces_between_us+"s%s", 
+                        tmp_str,
+                        ' ',
+                        line_list.back()
+                    );
+                    line_list.pop_back();
+                }
+                spaces_between_us = double * 1 + 1;
+                tmp_str =  line_list.join(.fmt('%'+spaces_between_us+'s', ' ')) + tmp_str; 
+                result.push_back(tmp_str);
+                
+                //обнуляемся
+                strip_str = strip_word;
+                line_list = .List().add(word);
+                tmp_str = '';
+            }
+        }
+        result.push_back(line_list.join(.fmt('%s', ' ')));
+        
+        return result;
+        
+
+    };
 
     // заполнение массиов преступлений и наказаний
    	var fillCrimes;
