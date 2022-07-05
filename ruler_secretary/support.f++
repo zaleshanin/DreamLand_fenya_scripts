@@ -52,7 +52,7 @@
 		}
 		return mob_msg;
 	};
-	.tmp.ruler.punishmentToString = function(punishArray){
+	.tmp.ruler.punishmentToString = function(punishArray, case){
 		var msg; msg='';
 		for(key in punishArray.keys) {
 			//собираем строку...
@@ -62,9 +62,9 @@
 				msg = .fmt("%1$s%2$s", msg, punishArray[key]);
 			} else {
 				if(.tmp.ruler.PunishmentType[key].type!='bool') {
-					msg = .fmt("%1$s%2$N3: %3$s", msg, .tmp.ruler.PunishmentType[key].name, punishArray[key]);
+					msg = .fmt("%1$s%2$N"+case+": %3$s", msg, .tmp.ruler.PunishmentType[key].name, punishArray[key]);
 				} else if (punishArray[key]) {
-					msg = .fmt("%1$s%2$N3", msg, .tmp.ruler.PunishmentType[key].name);
+					msg = .fmt("%1$s%2$N"+case+"", msg, .tmp.ruler.PunishmentType[key].name);
 				}
 			}
 		}
@@ -100,10 +100,10 @@
                 var i;
                 for( i = 1; i <= spaces; i = i + 1 ) {
                     spaces_between_us = double * 1 + 2;
-                    tmp_str = .fmt("%s%"+spaces_between_us+"s%s", 
-                        tmp_str,
+                    tmp_str = .fmt("%"+spaces_between_us+"s%s%s", 
                         ' ',
-                        line_list.back()
+                        line_list.back(),
+                        tmp_str
                     );
                     line_list.pop_back();
                 }
