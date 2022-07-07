@@ -13,10 +13,59 @@
     File.onExtraDescr = function(file, ch, str) {
         this = .tmp.ruler;
 
-        //смотрим на file.name
+        var result;
+        result = '';
 
+        var isClosed, isPrivateFile;
         
+        isPrivateFile = false;
+        if(file.value1&.tables.container_flags.closed) isClosed = true;
+
+        if(str.is_name(file.name)) {
+            //смотрим на личное дело
+            isPrivateFile = true;
+        }
+
+        if(!isPrivateFile && file.isClosed) {
+            return result;
+        }
+
+        if(isPrivateFile) {
+            if(file.criminal==null)
+                return .fmt("Обычн%1Gое|ый|ая %1$O6, ничего особенного.", file);
+
+            var criminal_str, criminal;
+            if(.tmp.ruler.criminals[file.criminal]!=null)
+                criminal = .tmp.ruler.criminals[file.criminal];
+            
+            if(criminal==null) {
+                criminal_str = file.criminal;
+            } else {
+                criminal_str = '';
+
+                if(criminal.remort_count)
+                    criminal_str = .fmt("{1{W({M%d{W){2 ", criminal.remort_count);
+
+                if(criminal.race!=null)
+                    criminal_str = .fmt("%s%N1 ", criminal_str, criminal.race);
+                var criminal_name;
+                criminal_name = criminal.name;
+                if(criminal.runame) criminal_name = criminal.runame;
+
+                criminal_str = .fmt("%s%s", criminal_str, criminal_name);
+            }
+            
+            if(isClosed) {
+                result = .fmt("Ты смотришь на кожаную папку c завязками с тисненым серебром  гербом Ордена Правителей. Ниже также тисненая надпись 'Личное дело:', под которой уже от руки, но очень аккуратно, написано '%N1'.", criminal_str).format(80);
+            } else {
+                // показываем содержание
+            }
+
+        }
+
+        return result;
     };
+
     File.onCantFetch = function(book, ch, unknownobj, unknownstr) {
         //onCantFetch(ch) - чар ch пытается что-то вытащить из этого контейнера.
         // если вернуть true - вытащить не получится.
