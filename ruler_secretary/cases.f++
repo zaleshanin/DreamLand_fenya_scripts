@@ -51,7 +51,7 @@
             ii=ii+1;
         }
 
-        result = result + .fmt("{x Судья:        {1%s{2\n", case_map.ruler);
+        result = result + .fmt("{x Судья:        {1%N1{2\n", case_map.ruler);
 
         return result;
     };
@@ -75,7 +75,12 @@
         //смотрим на case.name
         if(str.is_name(case.name)) {
             var desc; 
-            result = "Ты смотришь на гербовую бумагу исписанную каллиграфическим подчерком строгим готическим шрифтом, заверенную несколькими штампами и сургучными печатями разной толщины. Выглядит очень солидно.".format(80);
+            var ruler;
+            ruler = "суд|ья|ьи|ье|ью|ьёй|ье";
+            if(.tmp.ruler.archive[case.number].ru_ruler!=null)
+                ruler = .tmp.ruler.archive[case.number].ru_ruler;
+
+            result = .fmt("Ты смотришь на гербовую бумагу исписанную каллиграфическим подчерком, заверенную несколькими штампами и сургучными печатями разной толщины и подписанную %^N5. Выглядит очень солидно.", ruler).format(80);
             result = result + "\n" + .tmp.ruler.case.onExtraCase(case);
         }
 
