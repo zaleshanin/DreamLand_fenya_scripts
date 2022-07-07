@@ -58,9 +58,20 @@
             if(isClosed) {
                 result = .fmt("Ты смотришь на кожаную папку c завязками с тисненым серебром  гербом Ордена Правителей. Ниже также тисненая надпись 'Личное дело:', под которой уже от руки, но очень аккуратно, написано '%N1'.", criminal_str).format(80);
             } else {
+                var items_size;
+                items_size = file.items.size();
+
                 result = .fmt("Ты заглядываешь в открытую папку с личным делом %N2.", criminal_str);
-                if(file.items.size()==0) {
+                
+                if(items_size==0) {
                     result = .fmt("%s.. в абсолютно пустую папку.", result).format(80);
+                } else if (items_size==1) {
+                    if(file.items.at(0).pIndexData!=.tmp.ruler.case.Case) {
+                        result = .fmt("%1$s.. но это не уголовное дело, а %2$Gкакое-то|какой-то|какая-то %2$O1.", result, file.items.at(0)).format(80);
+                    } else {
+                        result = .fmt("%s. В папке всего один лист гербовой бумаги,  исписанный каллиграфическим подчерком, как и положено заверенный несколькими штампами и сургучными печатями разной толщины. Выглядит очень солидно.", result).format(80);
+                        result = result + "\n" + .tmp.ruler.case.onExtraCase(file.items.at(0));
+                    }
                 }
             }
         }
