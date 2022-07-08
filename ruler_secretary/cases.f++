@@ -86,22 +86,10 @@
 
         return result;
     };
-
-    Init = function(num) {
-        var objCase, case, char;
+    get_case_short = function(num) {
+        var case, char;
         case = .tmp.ruler.archive[num];
         char = .tmp.ruler.criminals[ case.criminal.id ];
-        objCase = Case.create();
-
-        objCase.number = num;
-
-        objCase.name = .fmt(
-            "%s %d %s %N1", 
-            objCase.name, 
-            num,
-            char.name,
-            char.runame
-        );
 
         var clan_color;
         clan_color="";
@@ -123,10 +111,34 @@
         chname = char.name;
         if(char.runame)
             chname = char.runame;
-        objCase.short_descr = .fmt(
-            "%s номер %d: '{1%s{2{1%s%N1{x{2 (%s)'",
-            objCase.short_descr,
+        return .fmt(
+            "номер %d: '{1%s{2{1%s%N1{x{2 (%s)'",
             num,
+            remort_str,
+            clan_color,
+            chname,
+            crimes
+        );
+    };
+    Init = function(num) {
+        var objCase, char;
+        char = .tmp.ruler.criminals[ .tmp.ruler.archive[num].criminal.id ];
+        objCase = Case.create();
+
+        objCase.number = num;
+
+        objCase.name = .fmt(
+            "%s %d %s %N1", 
+            objCase.name, 
+            num,
+            char.name,
+            char.runame
+        );
+
+        objCase.short_descr = .fmt(
+            "%s %s",
+            objCase.short_descr,
+            get_case_short(num),
             remort_str,
             clan_color,
             chname,

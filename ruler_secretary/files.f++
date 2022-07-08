@@ -62,16 +62,74 @@
                 items_size = file.items.size();
 
                 result = .fmt("Ты заглядываешь в открытую папку с личным делом %N2.", criminal_str);
+                var cases, other_list, count_str;
+                cases = .Array(); 
+                other_list = .List();
+                for(item in file.items) {
+                    if(item.pIndexData==.tmp.ruler.case.Case) {
+                        cases[item.number] = item.number;
+                    } else {
+                        other_list.push_back(item);
+                    }
+                }
                 
                 if(items_size==0) {
                     result = .fmt("%s.. в абсолютно пустую папку.", result).format(80);
-                } else if (items_size==1) {
-                    if(file.items.at(0).pIndexData!=.tmp.ruler.case.Case) {
-                        result = .fmt("%1$s.. но это не уголовное дело, а %2$Gкакое-то|какой-то|какая-то %2$O1.", result, file.items.at(0)).format(80);
-                    } else {
-                        result = .fmt("%s. В папке всего один лист гербовой бумаги,  исписанный каллиграфическим подчерком, как и положено заверенный несколькими штампами и сургучными печатями разной толщины. Выглядит очень солидно.", result).format(80);
+                }  else {   
+                    if (cases.size()==1) {
+                        result = .fmt("%s В папке всего один лист гербовой бумаги,  исписанный каллиграфическим подчерком, как и положено заверенный несколькими штампами и сургучными печатями разной толщины. Выглядит очень солидно.", result).format(80);
                         result = result + "\n" + .tmp.ruler.case.onExtraCase(file.items.at(0));
+                    } else if (cases.size()>1) {
+                        if (cases.size()<=5) {
+                            count_str = "небольшая ";
+                        } else if (cases.size()<=10) {
+                            count_str = "";
+                        } else if (case.size()<=20) {
+                            count_str = "внушительная ";
+                        } else {
+                            count_str = "громадная ";
+                        }
+
+                        result = .fmt("%s В папке %sстопка гербовой бумаги, исписанных каллиграфическим подчерком, и заверенных штампами и сургучными печатями разной толщины. Выглядит очень солидно. Ты быстро пролистываешь страницы:\n", result, count_str).format(80);
+
+                        var cases_list;
+                        cases_list = cases.keys.clone();
+
+                        var i;
+                        for(i=1;i<=cases.size();i=i+1) {
+                            result = result + 
+                                .fmt("- дело %1$s ({1{D{hc{lrсм дело%2$d{lelook case%2$d{x{2.)\n", 
+                                    .tmp.ruler.case.get_case_short(cases_list.back()),
+                                    cases_list.back()
+                                );
+                            cases_list.pop_back();
+                        }
                     }
+                    if(other_list.size()>0) {
+                        if(other_list.size()==1 && cases.size()==0) {
+                            result = .fmt("%1$s.. но внутри не уголовные дела, а %2$Gкакое|какой|какая-то %2$O1.", result, file.items.at(0)).format(80);
+                        } else {
+                            var other_str;
+                            other_str = "Зачем-то в папку кто-то положил ";
+                            
+                            for(i=0;i<other_list.size();i=i+1) {
+                                if(other_list.size()>1 && i==other_list.size()-1) {
+                                    other_str = .fmt("%s и", other_str);
+                                } else if(i>0) {
+                                    other_str = .fmt("%s,", other_str);
+                                }
+                                other_str = .fmt("%s %O4", other_str, other_list.at(i));
+                            }
+                            other_str = other_str + ". Возможно ";
+                            if(other_list.size()==1) {
+                                other_str = other_str + "улика.";
+                            } else {
+                                other_str = other_str + "улики.";
+                            }
+
+                            result = result + "\n" + other_str.format(80);
+                        }
+                    } 
                 }
             }
         }
