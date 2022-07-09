@@ -16,8 +16,9 @@
         var result;
         result = '';
 
-        var isClosed, isPrivateFile;
+        var isClosed, isPrivateFile, isCase, obj_case;
         
+        isCase = false;
         isPrivateFile = false;
         isClosed = (file.value1&.tables.container_flags.closed);
 
@@ -26,8 +27,28 @@
             isPrivateFile = true;
         }
 
-        if(!isPrivateFile && file.isClosed) {
+        // если дело закрыто, а смотрим на что-то из содержимого
+        if(!isPrivateFile && isClosed) {
             return result;
+        }
+
+        var case_num;
+        case_num = 0;
+        //пытаемся получить номер дела из строки
+        if(str.match("[a-zа-я]+([0-9]+)")) {
+            case_num = str.matchGroups("[a-zа-я]+([0-9]+)").at(0);
+            str = str.replace(case_num,'');
+            case_num = 0 + case_num;
+        }
+
+        if(case_num != 0 && 'case дело'.match('(^| )'+str) ) { //&& .tmp.ruler.archive[case_num]!=null
+            for(item in file.items) {
+                if(item.number!=null && item.number==case_num) {
+                    obj_case = item;
+                    isCase = true;
+                    break;
+                }
+            }
         }
 
         if(isPrivateFile) {
@@ -84,7 +105,7 @@
                             count_str = "небольшая ";
                         } else if (cases.size()<=10) {
                             count_str = "";
-                        } else if (case.size()<=20) {
+                        } else if (cases.size()<=20) {
                             count_str = "внушительная ";
                         } else {
                             count_str = "громадная ";
@@ -98,7 +119,7 @@
                         var i;
                         for(i=1;i<=cases.size();i=i+1) {
                             result = result + 
-                                .fmt("- дело %1$s ({1{D{hc{lrсм дело%2$d{lelook case%2$d{x{2.)\n", 
+                                .fmt("- дело %1$s ({1{c{hc{lrсм дело%2$d{lelook case%2$d{x{2.)\n", 
                                     .tmp.ruler.case.get_case_short(cases_list.back()),
                                     cases_list.back()
                                 );
@@ -132,6 +153,12 @@
                     } 
                 }
             }
+        }
+
+        if(isCase) {
+            result = .fmt("Ты открываешь %1$O4 на нужной странице и изучаешь гербовую бумагу исписанную каллиграфическим подчерком, заверенную, как и положенно, подписью, несколькими штампами и сургучными печатями разной толщины. Выглядит очень солидно.", file).format(80);
+
+            result = result + "\n" + .tmp.ruler.case.onExtraCase(obj_case);
         }
 
         return result;
