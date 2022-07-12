@@ -35,8 +35,8 @@
             
             if(ch.clan.name=="ruler") {
                 result = result + "\n"
-                    + "{C({cдля вставки через {1{C{lrвебредактор{lrwebedit{lx{2 ({hc{lrсм образец%2$d{lelook pattern{lx{hx), "
-                    + "{cдля вставки через {1{C{lrпреступление{lrcrime{lx{2 ({hc{lrсм преступление%2$d{lelook crime{lx{hx){C)\n";
+                    + "{C({cдля вставки через {1{C{lrвебредактор{lewebedit{lx{2 ({hc{lrсм образец%2$d{lelook pattern{lx{hx), "
+                    + "{cдля вставки через {1{C{lrпреступление{lecrime{lx{2 ({hc{lrсм преступление%2$d{lelook crime{lx{hx){C)\n";
                     
             }
             
@@ -48,6 +48,7 @@
 
         if(str.is_name("crimenote преступление")) {
             //TODO похожий код в get_case_short
+            //TODO добавить номер дела в crime subj
 
             var criminal, case_criminal;
             //айди, клан
