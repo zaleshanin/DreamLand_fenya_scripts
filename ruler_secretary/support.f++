@@ -123,6 +123,55 @@
         
 
     };
+	.tmp.ruler.case.onExtraCase = function(case_number) {
+        this = .tmp.ruler;
+
+        var result;
+        result = '';
+
+        var case_map;
+        case_map = .tmp.ruler.archive[case_number];       
+
+        result = ' {CД{cело номер {C' + case_number + "\n\n";
+
+        result = result + .fmt("{x Дата:          {c%1$s"
+            + "{x Осужденный:    %2$s\n"
+            + "{x Место:         {c%3$s\n",
+            case_map.date.name,
+            case_map.criminal.name,
+            case_map.place
+        );
+        
+        for(crime in case_map.crimes.values) {
+            result = result + "{x Преступление:  {c";
+            var strList, ii; ii=0;
+            strList = .tmp.ruler.formatToList(.tmp.ruler.crimeToString(crime)+'.', 64);
+            for(next_str in strList) {
+                if(ii) {
+                    result = result + .fmt("%16s", ' ');
+                }
+                result = result + next_str + "\n";
+                ii=ii+1;
+            }
+            if(crime.victims!=null) {
+                result = result + .tmp.ruler.victimsToString(crime, "{x %^s:   {x%s{x\n");
+            }
+        }
+        result = result + "{x Наказание:     {c";
+        ii=0;
+        strList = .tmp.ruler.formatToList(punishmentToString(case_map.punishment, 1)+'.', 64);
+        for(next_str in strList) {
+            if(ii) {
+                result = result + .fmt("%16s", ' ');
+            }
+            result = result + next_str + "\n";
+            ii=ii+1;
+        }
+
+        result = result + .fmt("{x Судья:        {1%N1{2\n", case_map.ruler);
+
+        return result;
+    };
 
     // заполнение массиов преступлений и наказаний
    	var fillCrimes;

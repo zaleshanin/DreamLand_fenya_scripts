@@ -6,56 +6,6 @@
 
     this = .tmp.ruler.case;
 
-    onExtraCase = function(case) {
-        this = .tmp.ruler;
-
-        var result;
-        result = '';
-
-        var case_map;
-        case_map = .tmp.ruler.archive[case.number];       
-
-        result = ' {CД{cело номер {C' + case.number + "\n\n";
-
-        result = result + .fmt("{x Дата:          {c%1$s"
-            + "{x Осужденный:    %2$s\n"
-            + "{x Место:         {c%3$s\n",
-            case_map.date.name,
-            case_map.criminal.name,
-            case_map.place
-        );
-        //TODO свой формат.
-        for(crime in case_map.crimes.values) {
-            result = result + "{x Преступление:  {c";
-            var strList, ii; ii=0;
-            strList = .tmp.ruler.formatToList(.tmp.ruler.crimeToString(crime)+'.', 64);
-            for(next_str in strList) {
-                if(ii) {
-                    result = result + .fmt("%16s", ' ');
-                }
-                result = result + next_str + "\n";
-                ii=ii+1;
-            }
-            if(crime.victims!=null) {
-                result = result + .tmp.ruler.victimsToString(crime, "{x %^s:   {x%s{x\n");
-            }
-        }
-        result = result + "{x Наказание:     {c";
-        ii=0;
-        strList = .tmp.ruler.formatToList(punishmentToString(case_map.punishment, 1)+'.', 64);
-        for(next_str in strList) {
-            if(ii) {
-                result = result + .fmt("%16s", ' ');
-            }
-            result = result + next_str + "\n";
-            ii=ii+1;
-        }
-
-        result = result + .fmt("{x Судья:        {1%N1{2\n", case_map.ruler);
-
-        return result;
-    };
-
     //прототип дела
     Case = .get_obj_index(4287);
     if(.buildplot) Case = .get_obj_index(3015); //лист бумаги
@@ -81,7 +31,57 @@
                 ruler = .tmp.ruler.archive[case.number].ru_ruler;
 
             result = .fmt("Ты смотришь на гербовую бумагу исписанную каллиграфическим подчерком, заверенную несколькими штампами и сургучными печатями разной толщины и подписанную %^N5. Выглядит очень солидно.", ruler).format(80);
-            result = result + "\n" + .tmp.ruler.case.onExtraCase(case);
+            result = result + "\n" + .tmp.ruler.case.onExtraCase(case.number);
+            
+            if(ch.clan.name=="ruler") {
+                result = result + "\n"
+                    + "{C({cдля вставки через {1{C{lrвебредактор{lrwebedit{lx{2 ({hc{lrсм образец%2$d{lelook pattern{lx{hx), "
+                    + "{cдля вставки через {1{C{lrпреступление{lrcrime{lx{2 ({hc{lrсм преступление%2$d{lelook crime{lx{hx){C)\n";
+                    
+            }
+            
+        }
+
+        if(str.is_name("pattern образец")) {
+            result = .tmp.ruler.case.onExtraCase(case.number).replace("{", "{{");
+        }
+
+        if(str.is_name("crimenote преступление")) {
+            //TODO похожий код в get_case_short
+
+            var criminal, case_criminal;
+            //айди, клан
+            case_criminal = .tmp.ruler.archive[case.number].criminal;
+            //реморт, имена
+            criminal = .tmp.ruler.criminals[case_criminal.id];
+
+            var crimes_str;
+            crimes_str = '';
+            for(key in .tmp.ruler.archive[case.number].crimes.keys) {
+                if(crimes_str!="") crimes_str = crimes_str + ", ";
+                crimes_str = crimes_str + key;
+            }
+
+            result = criminal.name;
+			if(criminal.runame!="") {
+				result = .fmt("{nr%s{ne%s{nx",criminal.runame, result);
+			}
+
+            if(case_criminal.clan!=null && case_criminal.clan.name!="none") {
+                result = .fmt("{%s%s{x", case_criminal.clan.color, result);
+            }
+
+            if(criminal.remort_count)
+                result = .fmt("{W({M%d{W){x %s {W({w%s{W{x", criminal.remort_count, result, crimes_str);
+
+
+            result = .fmt("crime subj %s\n", result);
+            result = result + "crime to all\n";
+
+            for(case_str in .tmp.ruler.case.onExtraCase(case.number).split("\n")) {
+                result = result + "crime + " + case_str + "\n";
+            }
+            result = result.replace("{", "{{");
         }
 
         return result;
