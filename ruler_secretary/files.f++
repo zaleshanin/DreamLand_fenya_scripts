@@ -68,7 +68,7 @@
                     criminal_str = .fmt("{1{W({M%d{W){2 ", criminal.remort_count);
 
                 if(criminal.race!=null)
-                    criminal_str = .fmt("%s%N1 ", criminal_str, criminal.race);
+                    criminal_str = .fmt("%s%s ", criminal_str, criminal.race);
                 var criminal_name;
                 criminal_name = criminal.name;
                 if(criminal.runame) criminal_name = criminal.runame;
@@ -111,7 +111,7 @@
                             count_str = "громадная ";
                         }
 
-                        result = .fmt("%s В папке %sстопка гербовой бумаги, исписанных каллиграфическим подчерком, и заверенных штампами и сургучными печатями разной толщины. Выглядит очень солидно. Ты быстро пролистываешь страницы:\n", result, count_str).format(80);
+                        result = .fmt("%s В папке %sстопка гербовой бумаги, исписанных каллиграфическим подчерком, и заверенных штампами и сургучными печатями разной толщины. Выглядит очень солидно. Ты быстро пролистываешь заголовки страниц:\n", result, count_str).format(80);
 
                         var cases_list;
                         cases_list = cases.keys.clone();
@@ -165,6 +165,8 @@
     };
 
     File.onCantFetch = function(file, ch, obj, pocket) {
+        if(obj==null) return false;
+        
         if(obj.pIndexData != .tmp.ruler.case.Case)
             return false;
 
@@ -178,7 +180,7 @@
         if(obj.pIndexData != .tmp.ruler.case.Case) {
             if(ch.clan.name != "ruler") {
                 if(verbose) {
-                    ch.act("%1$O1 не предназначена для хранения $2$O4.", file, obj);
+                    ch.act("%1$O1 не предназначена для хранения %2$O4.", file, obj);
                 }
                 return true;
             }
@@ -187,47 +189,12 @@
                 && .tmp.ruler.archive[obj.number]!=null
                 && .tmp.ruler.archive[obj.number].criminal.id != file.criminal) {
                 if(verbose) {
-                    ch.act("$1$^O4 не должно храниться в %2$O6.", obj, file);
+                    ch.act("%1$^O4 не должно храниться в %2$O6.", obj, file);
                 }
                 return true;
             }
         }
         return false;
-    };
-    File.onPut = function(book, ch, obj, cont) {
-        //onPut(ch,obj,cont) - ch кладет obj в контейнер cont.
-        // Триггер вызывается для всех троих.
-        //начинает вибрировать если в нее положить бумажку
-		/* this = .tmp.epidemy;
-		if(book==obj && book.epidemy!=null && book.epidemy.ownerName!=ch.name) {
-		    book.obj_to_char(ch);
-		    ch.act("Ты не можешь хранить %O4 в %O6.",book,cont);
-			necronomiconNotOwnerCheck(book,ch);
-            return;
-        }
-		if(book!=cont) return;
-        if(!(book.extra_flags&.tables.extra_flags.hum)) {
-            book.extra_flags = .set_bit(book.extra_flags, .tables.extra_flags.hum);
-            ch.in_room.ppl.call.act('%1$^O1 начинает вибрировать.',book);
-        }
-        if(obj.epidemy.spellIndexMin==0 && obj.epidemy.spellIndexMax==4) {
-            ch.act('По разрыву пробегает фиолетовый огонь, и он изчезает...\n' +
-                '%1$O1 становится частью страницы книги.', obj);
-            ch.in_room.ppl.call.act('%1$^O1 вспыхивает магическим огнём.',book);
-            book.extra_flags = .set_bit(book.extra_flags, .tables.extra_flags.glow);
-            book.epidemy.isLorem = 1;
-            obj.clear();
-            obj.extract(true);
-
-        } */
-    };
-    File.onFetch = function(book,ch,obj) {
-        //onFetch(ch,obj) - ch вынул obj из этого предмета-контейнера
-        //если бумажек внутри не осталось, перестаём вибрировать
-        /* if(book.items.size()==0) {
-            book.extra_flags = .unset_bit(book.extra_flags, .tables.extra_flags.hum);
-            ch.in_room.ppl.call.act('%1$^O1 перестаёт вибрировать.', book);
-        } */
     };
 
     Init = function(id) {
