@@ -43,7 +43,7 @@
 			crime_str = crimeToString(crime);
 
 			if (crime.victims != null)
-				crime_str = crime_str + victimsToString(crime, "%s: %s");
+				crime_str = crime_str + ", " + victimsToString(crime, "%s: %s");
 
 			mob_msg = .fmt("%1$s %2$s",
 				mob_msg,
@@ -224,6 +224,31 @@
 
 		return result;
 	};
+
+	.tmp.ruler.file.where_file = function(ch_id) {
+		var result, the_file;
+		result = '';
+
+		for(file in File.instances) {
+			if(file.criminal == (""+ch_id)) {
+    			the_file = file;
+    			break;
+			}
+		}
+
+		if(the_file==null) return result;
+
+		if(the_file.getCarrier()!=null) {
+			result = .fmt("у %C2", the_file.getCarrier());
+		} else {
+			if(the_file.in_obj != null) {
+				result = .fmt("внутри %O2 ", the_file.in_obj);
+			} 
+			result = .fmt('%sгде-то в {1%N2{2', result, the_file.getRoom().area.name);
+		}
+
+		return .fmt("%^O1 находится %s.",the_file, result);
+	}; 
 
 	// заполнение массиов преступлений и наказаний
 	var fillCrimes;

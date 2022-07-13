@@ -6,6 +6,7 @@
 
     this = .tmp.ruler.file;
 
+    Safe = .get_obj_index(4308);
     //прототип папки
     File = .get_obj_index(4288);
     if(.buildplot) File = .get_obj_index(732); //некрономикон
@@ -195,6 +196,18 @@
             }
         }
         return false;
+    };
+    File.onQuit = function(file, ch, count) {
+        if(file.criminal==null) return;
+
+        ch.act('Ты не можешь забрать из мира %O1!', file);
+        ch.act('%^O1 исчезает у тебя из рук.', file);
+        ch.recho('%^O1 исчезает из рук %^C2.', file, ch);
+
+        if(.tmp.ruler.file.Safe.instances.size()>0)
+            file.obj_to_obj(.tmp.ruler.file.Safe.instances.at(0));
+        else
+            file.obj_to_room(ch.in_room);
     };
 
     Init = function(id) {
