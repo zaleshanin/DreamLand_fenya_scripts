@@ -1,197 +1,250 @@
-.apply(function(){
-	if(.tmp.ruler==null)
+.apply(function () {
+	if (.tmp.ruler == null)
 		.tmp.ruler = .Map();
 
     // suport functions
-	.tmp.ruler.crimeToString = function(crime) {
+	.tmp.ruler.crimeToString = function (crime) {
 		var result;
 		result = '';
 
-		result = result + crime.number + ". " 
+		result = result + crime.number + ". "
 			+ .tmp.ruler.Crimes[crime.number].name;
 
 		return result;
 	};
-	.tmp.ruler.victimsToString = function(crime, pattern) {
-		var victim_str, victim_val; victim_str = ''; victim_val = ''; 
-		if(.tmp.ruler.Crimes[crime.number].victim=='npc') {
+	.tmp.ruler.victimsToString = function (crime, pattern) {
+		var victim_str, victim_val; victim_str = ''; victim_val = '';
+		if (.tmp.ruler.Crimes[crime.number].victim == 'npc') {
 			victim_val = crime.victims;
-			if(crime.victims.match('.*, .*')) 
+			if (crime.victims.match('.*, .*'))
 				victim_str = "потерпевшие";
 			else
 				victim_str = "потерпевший";
 		} else {
-			for(victim in crime.victims) {
-				if(victim_val!='') victim_val = victim_val + ', ';
-				victim_val = .fmt("%s%^s", victim_val, victim); 
+			for (victim in crime.victims) {
+				if (victim_val != '') victim_val = victim_val + ', ';
+				victim_val = .fmt("%s%^s", victim_val, victim);
 			}
-			if(crime.victims.size()>1)
+			if (crime.victims.size() > 1)
 				victim_str = "потерпевшие";
-			else 
+			else
 				victim_str = "потерпевший";
 		}
 		return .fmt(pattern, victim_str, victim_val);
 	};
-	.tmp.ruler.crimesToString = function(crimes) {
+	.tmp.ruler.crimesToString = function (crimes) {
 		var mob_msg, crime_str;
 		mob_msg = '';
-		for(crime in crimes.values) {
-			if( mob_msg != '' ) {
+		for (crime in crimes.values) {
+			if (mob_msg != '') {
 				mob_msg = mob_msg + ", ";
 			}
-			
-            crime_str = crimeToString(crime);
-            
-            if(crime.victims!=null)
-                crime_str=crime_str + victimsToString(crime, "%s: %s");
 
-			mob_msg = .fmt("%1$s %2$s", 
-				mob_msg, 
+			crime_str = crimeToString(crime);
+
+			if (crime.victims != null)
+				crime_str = crime_str + victimsToString(crime, "%s: %s");
+
+			mob_msg = .fmt("%1$s %2$s",
+				mob_msg,
 				crime_str
 			);
 		}
 		return mob_msg;
 	};
-	.tmp.ruler.punishmentToString = function(punishArray, case){
-		var msg; msg='';
-		for(key in punishArray.keys) {
+	.tmp.ruler.punishmentToString = function (punishArray, case) {
+		var msg; msg = '';
+		for (key in punishArray.keys) {
 			//собираем строку...
-			if(.tmp.ruler.PunishmentType[key].type=='bool' && !punishArray[key]) continue;
-			if(msg!='') msg = msg + ', ';
-			if(.tmp.ruler.PunishmentType[key].name==''){
+			if (.tmp.ruler.PunishmentType[key].type == 'bool' && !punishArray[key]) continue;
+			if (msg != '') msg = msg + ', ';
+			if (.tmp.ruler.PunishmentType[key].name == '') {
 				msg = .fmt("%1$s%2$s", msg, punishArray[key]);
 			} else {
-				if(.tmp.ruler.PunishmentType[key].type!='bool') {
-					msg = .fmt("%1$s%2$N"+case+": %3$s", msg, .tmp.ruler.PunishmentType[key].name, punishArray[key]);
+				if (.tmp.ruler.PunishmentType[key].type != 'bool') {
+					msg = .fmt("%1$s%2$N" +case +": %3$s", msg, .tmp.ruler.PunishmentType[key].name, punishArray[key]);
 				} else if (punishArray[key]) {
-					msg = .fmt("%1$s%2$N"+case+"", msg, .tmp.ruler.PunishmentType[key].name);
+					msg = .fmt("%1$s%2$N" +case +"", msg, .tmp.ruler.PunishmentType[key].name);
 				}
 			}
 		}
 		return msg;
 	};
-    .tmp.ruler.formatToList = function(str, limit) {
-        var list, word, line_list, tmp_str, strip_word, strip_str, result;
-        tmp_str = ''; strip_str = '';
-        
-        result = .List();
-        line_list = .List();
+    .tmp.ruler.formatToList = function (str, limit) {
+		var list, word, line_list, tmp_str, strip_word, strip_str, result;
+		tmp_str = ''; strip_str = '';
 
-        str = str.replace("  ", " ");
-        list = str.split(" ");
-        for(iWord in list) {
-            word = iWord.trim();
-            strip_word = word.stripColour();
-            if(strip_str!='') {
-                strip_str = strip_str + ' ';
-            }
-            
-            if( strip_str.size() + strip_word.size() <= limit ) {
-                strip_str = strip_str + strip_word;
-                line_list.push_back(word);
-            } else {
-                strip_str = strip_str.trim();
+		result = .List();
+		line_list = .List();
 
-                var line_size, spaces, double, spaces_between_us;
-                line_size = line_list.size(); 
-                spaces = limit - (strip_str.size()); 
-                double = spaces / (line_size - 1);
-                spaces = spaces % (line_size - 1);
-                var i;
-                for( i = 1; i <= spaces; i = i + 1 ) {
-                    spaces_between_us = double * 1 + 2;
-                    tmp_str = .fmt("%"+spaces_between_us+"s%s%s", 
-                        ' ',
-                        line_list.back(),
-                        tmp_str
-                    );
-                    line_list.pop_back();
-                }
-                spaces_between_us = double * 1 + 1;
-                tmp_str =  line_list.join(.fmt('%'+spaces_between_us+'s', ' ')) + tmp_str; 
-                result.push_back(tmp_str);
-                
-                //обнуляемся
-                strip_str = strip_word;
-                line_list = .List().add(word);
-                tmp_str = '';
-            }
+		str = str.replace("  ", " ");
+		list = str.split(" ");
+		for (iWord in list) {
+			word = iWord.trim();
+			strip_word = word.stripColour();
+			if (strip_str != '') {
+				strip_str = strip_str + ' ';
+			}
+
+			if (strip_str.size() + strip_word.size() <= limit) {
+				strip_str = strip_str + strip_word;
+				line_list.push_back(word);
+			} else {
+				strip_str = strip_str.trim();
+
+				var line_size, spaces, double, spaces_between_us;
+				line_size = line_list.size();
+				spaces = limit - (strip_str.size());
+				double = spaces / (line_size - 1);
+				spaces = spaces % (line_size - 1);
+				var i;
+				for (i = 1; i <= spaces; i = i + 1) {
+					spaces_between_us = double * 1 + 2;
+					tmp_str = .fmt("%" + spaces_between_us + "s%s%s",
+						' ',
+						line_list.back(),
+						tmp_str
+					);
+					line_list.pop_back();
+				}
+				spaces_between_us = double * 1 + 1;
+				tmp_str = line_list.join(.fmt('%' + spaces_between_us + 's', ' ')) + tmp_str;
+				result.push_back(tmp_str);
+
+				//обнуляемся
+				strip_str = strip_word;
+				line_list = .List().add(word);
+				tmp_str = '';
+			}
+		}
+		result.push_back(line_list.join(.fmt('%s', ' ')));
+
+		return result;
+	};
+	.tmp.ruler.get_ch_str = function(name, runame, remort_count, clan) {
+		var result;
+		result = '';
+
+        //имя
+        result = name;
+        if(runame!="") {
+            result = .fmt("{nr%s{ne%s{nx", runame, result);
         }
-        result.push_back(line_list.join(.fmt('%s', ' ')));
-        
-        return result;
-        
+		result = .fmt("{W%s{x", result);
 
-    };
-	.tmp.ruler.case.onExtraCase = function(case_number) {
-        this = .tmp.ruler;
+        //реморт
+        if(remort_count)
+            result = .fmt("{W({M%d{W){x %s", remort_count, result);
+        //клан
+        if(clan!=null && clan.name!="none") {
+            result = .fmt("{w[{%s%s{w]{x %s", clan.color, clan.name.toUpper().at(0), result);
+        }
 
+		return result;
+	};
+
+	.tmp.ruler.case.get_case_title = function(num) {
         var result;
         result = '';
 
-        var case_map;
-        case_map = .tmp.ruler.archive[case_number];       
+		//преступления
+        for(key in .tmp.ruler.archive[num].crimes.keys) {
+            if(result != "") result = result + ", ";
+            result = result + key;
+        }
 
-        result = ' {CД{cело номер {C' + case_number + "\n\n";
+		var criminal, case_criminal;
+        //айди, клан
+        case_criminal = .tmp.ruler.archive[num].criminal;
+        //реморт, имена
+        criminal = .tmp.ruler.criminals[case_criminal.id];
 
-        result = result + .fmt("{x Дата:          {c%1$s"
-            + "{x Осужденный:    %2$s\n"
-            + "{x Место:         {c%3$s\n",
-            case_map.date.name,
-            case_map.criminal.name,
-            case_map.place
+        //строка преступника (имя, рус.имя, реморт, клан)
+        result = .fmt("%s {W({w%s{W){x", 
+			.tmp.ruler.get_ch_str(criminal.name, criminal.runame, criminal.remort_count, case_criminal.clan),
+			result);
+
+		return result;
+    };
+    
+    .tmp.ruler.case.get_case_short = function(num) {
+        return .fmt(
+            "номер %d: '%s'",
+            num,
+            .tmp.ruler.case.get_case_title(num)
         );
-        
-        for(crime in case_map.crimes.values) {
-            result = result + "{x Преступление:  {c";
-            var strList, ii; ii=0;
-            strList = .tmp.ruler.formatToList(.tmp.ruler.crimeToString(crime)+'.', 64);
-            for(next_str in strList) {
-                if(ii) {
-                    result = result + .fmt("%16s", ' ');
-                }
-                result = result + next_str + "\n";
-                ii=ii+1;
-            }
-            if(crime.victims!=null) {
-                result = result + .tmp.ruler.victimsToString(crime, "{x %^s:   {x%s{x\n");
-            }
-        }
-        result = result + "{x Наказание:     {c";
-        ii=0;
-        strList = .tmp.ruler.formatToList(punishmentToString(case_map.punishment, 1)+'.', 64);
-        for(next_str in strList) {
-            if(ii) {
-                result = result + .fmt("%16s", ' ');
-            }
-            result = result + next_str + "\n";
-            ii=ii+1;
-        }
-
-        result = result + .fmt("{x Судья:        {1%N1{2\n", case_map.ruler);
-
-        return result;
     };
 
-    // заполнение массиов преступлений и наказаний
-   	var fillCrimes;
-	fillCrimes = function() {
+	.tmp.ruler.case.onExtraCase = function (case_number) {
 		this = .tmp.ruler;
-	
+
+		var result;
+		result = '';
+
+		var case_map;
+		case_map = .tmp.ruler.archive[case_number];
+
+		result = ' {CД{cело номер {C' + case_number + "\n\n";
+
+		result = result + .fmt("{x Дата:          {c%1$s"
+			+ "{x Осужденный:    %2$s\n"
+			+ "{x Место:         {c%3$s\n",
+			case_map.date.name,
+			case_map.criminal.name,
+			case_map.place
+		);
+
+		for (crime in case_map.crimes.values) {
+			result = result + "{x Преступление:  {c";
+			var strList, ii; ii = 0;
+			strList = .tmp.ruler.formatToList(.tmp.ruler.crimeToString(crime) + '.', 64);
+			for (next_str in strList) {
+				if (ii) {
+					result = result + .fmt("%16s", ' ');
+				}
+				result = result + next_str + "\n";
+				ii = ii + 1;
+			}
+			if (crime.victims != null) {
+				result = result + .tmp.ruler.victimsToString(crime, "{x %^s:   {x%s{x\n");
+			}
+		}
+		result = result + "{x Наказание:     {c";
+		ii = 0;
+		strList = .tmp.ruler.formatToList(punishmentToString(case_map.punishment, 1) + '.', 64);
+		for (next_str in strList) {
+			if (ii) {
+				result = result + .fmt("%16s", ' ');
+			}
+			result = result + next_str + "\n";
+			ii = ii + 1;
+		}
+
+		result = result + .fmt("{x Судья:        {1%N1{2\n", case_map.ruler);
+
+		return result;
+	};
+
+	// заполнение массиов преступлений и наказаний
+	var fillCrimes;
+
+	fillCrimes = function () {
+		this = .tmp.ruler;
+
 		Crimes = .Array();
 		Punishments = .Array();
 
 		var addCrime;
-		addCrime = function(crimesArray, article_num, article_name, punishment_num,victim) {
+		addCrime = function (crimesArray, article_num, article_name, punishment_num, victim) {
 			var crime;
 			crime = .Map();
 			crime.number = article_num;
 			crime.name = article_name;
 			crime.punishment = punishment_num;
 			crime.victim = victim;
-	
+
 			crimesArray[article_num] = crime;
-	
+
 			return crimesArray;
 		};
 		Crimes = addCrime(Crimes, "2.1.1", "Нападение на персонажа", "4.1", "pc");
@@ -207,12 +260,12 @@
 		Crimes = addCrime(Crimes, "2.3", "Лжесвидетельствование", "4.6", "");
 		Crimes = addCrime(Crimes, "2.4", "Превышение полномочий Правителем", "4.7", "");
 		Crimes = addCrime(Crimes, "2.5", "2.1.1-2.1.3 против Правителя", "4.1", "pc");
-		Crimes = addCrime(Crimes, "2.6", "Вторжение в Тюрьму, Резиденцию Правителей","4.8", "");
-		Crimes = addCrime(Crimes, "2.7", "Неявка на заседание суда","4.9", "");
-		Crimes = addCrime(Crimes, "2.8", "Оказание сопротивления Правителю. Содействие задержанным, арестованным и заключенным","4.8", "");
+		Crimes = addCrime(Crimes, "2.6", "Вторжение в Тюрьму, Резиденцию Правителей", "4.8", "");
+		Crimes = addCrime(Crimes, "2.7", "Неявка на заседание суда", "4.9", "");
+		Crimes = addCrime(Crimes, "2.8", "Оказание сопротивления Правителю. Содействие задержанным, арестованным и заключенным", "4.8", "");
 
 		var addPunishment;
-		addPunishment = function(punishmentArray, num, jail, judge, fine, confiscate, wanted, execution, additional){
+		addPunishment = function (punishmentArray, num, jail, judge, fine, confiscate, wanted, execution, additional) {
 			var punish;
 			punish = .Map();
 			punish.number = num;
@@ -223,9 +276,9 @@
 			punish.wanted = wanted;
 			punish.execution = execution;
 			punish.additional = additional;
-	
+
 			punishmentArray[num] = punish;
-	
+
 			return punishmentArray;
 		};
 
@@ -238,9 +291,9 @@
 		Punishments = addPunishment(Punishments, "4.7", "60-300", "10-200", "", true, false, true, "понижение звания, запрет вести расследования и выносить обвинения (60 тиков - 7 суток), отстранение от занимаемой должности (изгнанием из Правителей)");
 		Punishments = addPunishment(Punishments, "4.8", "10-180", "20-100", "", false, true, true, "");
 		Punishments = addPunishment(Punishments, "4.9", "", "20-85", "", false, true, false, "");
-		
+
 		var getPunishmentType;
-		getPunishmentType = function(name,type) {
+		getPunishmentType = function (name, type) {
 			var result;
 			result = .Map();
 			result.name = name;
@@ -248,15 +301,16 @@
 			return result;
 		};
 		PunishmentType = .Array();
-		PunishmentType['jail'] = getPunishmentType('тюремн|ое|ого|ому|ое|ым|ом заключен|ие|ия|ию|ие|ием|ии','str');
+		PunishmentType['jail'] = getPunishmentType('тюремн|ое|ого|ому|ое|ым|ом заключен|ие|ия|ию|ие|ием|ии', 'str');
 		PunishmentType['judge'] = getPunishmentType('понижен|ие|ия|ию|ие|ием|ии законопослушности', 'str');
-		PunishmentType['fine'] = getPunishmentType('штраф||а|у||ом|е','str');
+		PunishmentType['fine'] = getPunishmentType('штраф||а|у||ом|е', 'str');
 		PunishmentType['confiscate'] = getPunishmentType('конфискац|ия|ии|ии|ию|ией|ии', 'bool');
 		PunishmentType['wanted'] = getPunishmentType('объявлен|ие|ия|ию|ие|ием|ии в розыск', 'bool');
 		PunishmentType['execution'] = getPunishmentType('смертн|ая|ой|ой|ую|ой|ой казн|ь|и|и|ь|ью|и', 'bool');
-		PunishmentType['additional'] = getPunishmentType('','str');
+		PunishmentType['additional'] = getPunishmentType('', 'str');
 	};
-	
+
+
 	fillCrimes();
 
 })

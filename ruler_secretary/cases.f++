@@ -37,9 +37,7 @@
                 result = result + "\n"
                     + "{C({cдля вставки через {1{C{lrвебредактор{lewebedit{lx{2 ({hc{lrсм образец%2$d{lelook pattern{lx{hx), "
                     + "{cдля вставки через {1{C{lrпреступление{lecrime{lx{2 ({hc{lrсм преступление%2$d{lelook crime{lx{hx){C)\n";
-                    
             }
-            
         }
 
         if(str.is_name("pattern образец")) {
@@ -47,80 +45,18 @@
         }
 
         if(str.is_name("crimenote преступление")) {
-            //TODO похожий код в get_case_short
-            //TODO добавить номер дела в crime subj
-
-            var criminal, case_criminal;
-            //айди, клан
-            case_criminal = .tmp.ruler.archive[case.number].criminal;
-            //реморт, имена
-            criminal = .tmp.ruler.criminals[case_criminal.id];
-
-            var crimes_str;
-            crimes_str = '';
-            for(key in .tmp.ruler.archive[case.number].crimes.keys) {
-                if(crimes_str!="") crimes_str = crimes_str + ", ";
-                crimes_str = crimes_str + key;
-            }
-
-            result = criminal.name;
-			if(criminal.runame!="") {
-				result = .fmt("{nr%s{ne%s{nx",criminal.runame, result);
-			}
-
-            if(case_criminal.clan!=null && case_criminal.clan.name!="none") {
-                result = .fmt("{%s%s{x", case_criminal.clan.color, result);
-            }
-
-            if(criminal.remort_count)
-                result = .fmt("{W({M%d{W){x %s {W({w%s{W{x", criminal.remort_count, result, crimes_str);
-
-
-            result = .fmt("crime subj %s\n", result);
+            result = .fmt("crime subj %s\n", case.number, .tmp.ruler.case.get_case_title(case.number));
             result = result + "crime to all\n";
 
             for(case_str in .tmp.ruler.case.onExtraCase(case.number).split("\n")) {
                 result = result + "crime + " + case_str + "\n";
             }
-            result = result.replace("{", "{{");
+            result = result.replace("{", "{{"); 
         }
 
         return result;
     };
-    get_case_short = function(num) {
-        var case, char;
-        case = .tmp.ruler.archive[num];
-        char = .tmp.ruler.criminals[ case.criminal.id ];
 
-        var clan_color;
-        clan_color="";
-        if(case.criminal.clan!=null) {
-            if(case.criminal.clan.name!="none")
-                clan_color = "{" + case.criminal.clan.color;
-        }
-        var crimes;
-        crimes = "";
-        for(key in case.crimes.keys) {
-            if(crimes!="") crimes=crimes+", ";
-            crimes=crimes+key;
-        }
-        var remort_str;
-        remort_str='';
-        if(char.remort_count)
-            remort_str = .fmt("{W({M%d{W){x ", char.remort_count);
-        var chname;
-        chname = char.name;
-        if(char.runame)
-            chname = char.runame;
-        return .fmt(
-            "номер %d: '{1%s{2{1%s%N1{x{2 (%s)'",
-            num,
-            remort_str,
-            clan_color,
-            chname,
-            crimes
-        );
-    };
     Init = function(num) {
         var objCase, char;
         char = .tmp.ruler.criminals[ .tmp.ruler.archive[num].criminal.id ];
@@ -139,24 +75,10 @@
         objCase.short_descr = .fmt(
             "%s %s",
             objCase.short_descr,
-            get_case_short(num),
-            remort_str,
-            clan_color,
-            chname,
-            crimes
+            get_case_short(num)
         );
 
         return objCase;
     };
-
-    /*
-    Case - уголовное дело. Объект типа parchment. Имеет уникальный номер.
-
-    Case.onExtraDescr(obj, ch, str)
-        "case ###" - выводит тоже самое что crimenote
-        "case crimenote" - рулеру выводит заполненный crime 
-            (crime subj ..., crime to ..., crime + ...)
-        "case template" - заполненный crime для вставки через web edit
-    */
-
+    
 })
