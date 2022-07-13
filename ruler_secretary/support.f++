@@ -220,7 +220,7 @@
 			ii = ii + 1;
 		}
 
-		result = result + .fmt("{x Судья:        {1%N1{2\n", case_map.ruler);
+		result = result + .fmt("{x Судья:         %N1\n", case_map.ruler);
 
 		return result;
 	};
