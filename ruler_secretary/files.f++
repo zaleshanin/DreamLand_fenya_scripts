@@ -190,7 +190,7 @@
                 && .tmp.ruler.archive[obj.number]!=null
                 && .tmp.ruler.archive[obj.number].criminal.id != file.criminal) {
                 if(verbose) {
-                    ch.act("%1$^O4 не должно храниться в %2$O6.", obj, file);
+                    ch.act("%1$^O4 не долж%1$Gно|ен|на храниться в %2$O6.", obj, file);
                 }
                 return true;
             }
@@ -232,10 +232,9 @@
             chname = char.runame;
 
         file.short_descr = .fmt(
-            "%s {1%s{2%N2 %N2",
+            "%s {1%s{2%N2",
             file.short_descr,
             remort_str,
-            char.race,
             chname
         );
 

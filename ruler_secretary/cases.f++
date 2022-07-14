@@ -65,7 +65,7 @@
         objCase.number = num;
 
         objCase.name = .fmt(
-            "%s %d %s %N1", 
+            "%s #%d %s %N1", 
             objCase.name, 
             num,
             char.name,

@@ -4,13 +4,9 @@
 
     // suport functions
 	.tmp.ruler.crimeToString = function (crime) {
-		var result;
-		result = '';
 
-		result = result + crime.number + ". "
-			+ .tmp.ruler.Crimes[crime.number].name;
+		return crime.number + ". " + .tmp.ruler.Crimes[crime.number].name;
 
-		return result;
 	};
 	.tmp.ruler.victimsToString = function (crime, pattern) {
 		var victim_str, victim_val; victim_str = ''; victim_val = '';
@@ -45,7 +41,7 @@
 			if (crime.victims != null)
 				crime_str = crime_str + ", " + victimsToString(crime, "%s: %s");
 
-			mob_msg = .fmt("%1$s %2$s",
+			mob_msg = .fmt("%1$s%2$s",
 				mob_msg,
 				crime_str
 			);
@@ -121,20 +117,29 @@
 
 		return result;
 	};
-	.tmp.ruler.get_ch_str = function(name, runame, remort_count, clan) {
+	.tmp.ruler.get_ch_str = function(name, runame, remort_count, pretitle, title, clan) {
 		var result;
 		result = '';
 
-        //имя
+        //имена
         result = name;
         if(runame!="") {
             result = .fmt("{nr%s{ne%s{nx", runame, result);
         }
 		result = .fmt("{W%s{x", result);
 
+		if(pretitle!='') {
+			result = .fmt("{x%s %s", pretitle, result);
+		}
+
+		if(title!='') {
+			result = .fmt("%s %s", result, title);
+		}
+
         //реморт
         if(remort_count)
             result = .fmt("{W({M%d{W){x %s", remort_count, result);
+
         //клан
         if(clan!=null && clan.name!="none") {
             result = .fmt("{w[{%s%s{w]{x %s", clan.color, clan.name.toUpper().at(0), result);
@@ -161,7 +166,7 @@
 
         //строка преступника (имя, рус.имя, реморт, клан)
         result = .fmt("%s {W({w%s{W){x", 
-			.tmp.ruler.get_ch_str(criminal.name, criminal.runame, criminal.remort_count, case_criminal.clan),
+			.tmp.ruler.get_ch_str(criminal.name, criminal.runame, criminal.remort_count, '', '', case_criminal.clan),
 			result);
 
 		return result;
