@@ -124,7 +124,9 @@
         //имена
         result = name;
         if(runame!="") {
-            result = .fmt("{nr%s{ne%s{nx", runame, result);
+			//есть бага с отображением {n в short_descr
+            //result = .fmt("{nr%s{ne%s{nx", runame, result);
+			result = .fmt("%N1", runame);
         }
 		result = .fmt("{W%s{x", result);
 
@@ -191,7 +193,7 @@
 
 		result = ' {CД{cело номер {C' + case_number + "\n\n";
 
-		result = result + .fmt("{x Дата:          {c%1$s"
+		result = result + .fmt("{x Дата:          {c%1$s\n"
 			+ "{x Осужденный:    %2$s\n"
 			+ "{x Место:         {c%3$s\n",
 			case_map.date.name,
@@ -281,7 +283,7 @@
 		Crimes = addCrime(Crimes, "2.1.2", "Воровство у персонажа", "4.2", "pc");
 		Crimes = addCrime(Crimes, "2.1.3", "Порча имущества персонажа", "4.3", "pc");
 
-		Crimes = addCrime(Crimes, "2.2.1", "Изменение местопложения спецмоба", "4.4", "npc");
+		Crimes = addCrime(Crimes, "2.2.1", "Изменение местоположения спецмоба", "4.4", "npc");
 		Crimes = addCrime(Crimes, "2.2.2", "Действия против спецмоба, приводящие к невозможности исполнения своих функций", "4.4", "npc");
 		Crimes = addCrime(Crimes, "2.2.3", "Нападение на спецмоба", "4.4", "npc");
 		Crimes = addCrime(Crimes, "2.2.4", "Убийство спецмоба", "4.4", "npc");

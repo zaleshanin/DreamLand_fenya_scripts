@@ -30,13 +30,13 @@
             if(.tmp.ruler.archive[case.number].ru_ruler!=null)
                 ruler = .tmp.ruler.archive[case.number].ru_ruler;
 
-            result = .fmt("Ты смотришь на гербовую бумагу исписанную каллиграфическим подчерком, заверенную несколькими штампами и сургучными печатями разной толщины и подписанную %^N5. Выглядит очень солидно.", ruler).format(80);
+            result = .fmt("Ты смотришь на гербовую бумагу исписанную каллиграфическим почерком, заверенную несколькими штампами и сургучными печатями разной толщины и подписанную %^N5. Выглядит очень солидно.", ruler).format(80);
             result = result + "\n" + .tmp.ruler.case.onExtraCase(case.number);
             
             if(ch.clan.name=="ruler") {
                 result = result + "\n"
-                    + "{C({cдля вставки через {1{C{lrвебредактор{lewebedit{lx{2 ({hc{lrсм образец%2$d{lelook pattern{lx{hx), "
-                    + "{cдля вставки через {1{C{lrпреступление{lecrime{lx{2 ({hc{lrсм преступление%2$d{lelook crime{lx{hx){C)\n";
+                    + "{C({cдля вставки через {1{C{lrвебредактор{lewebedit{lx{2 ({hc{lrсм образец{lelook pattern{lx{hx), "
+                    + "{cдля вставки через {1{C{lrпреступление{lecrime{lx{2 ({hc{lrсм преступление{lelook crime{lx{hx){C)\n";
             }
         }
 
