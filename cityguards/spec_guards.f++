@@ -189,8 +189,6 @@
 	checkGuard = function(mob) {
 		//очарован
 		if(mob.charmed) return false;
-		//не хоумтаун
-		if(!(mob.in_room.area.area_flag&.tables.area_flags.hometown)) return false;
 		//в отключке
 		if(mob.position < .tables.position_table.rest) return false;
 		//дерусь
@@ -203,7 +201,10 @@
 		
 		//базовые проверки гварда на пригодность
 		if(!checkGuard(mob)) return false;
-		
+
+		//не хоумтаун
+		if(!(mob.in_room.area.area_flag&.tables.area_flags.hometown)) return false;
+
 		//никого нет
 		if(mob.in_room.ppl.size()<=1) return false;
 
@@ -301,10 +302,44 @@
 		mob.talktask = .tmp.cityguards.TalkTask(mob, ch);
 		mob.talktask.thread.start();
 	};
+
+	isCrime = function(ch, victim, skill) {
+		if(skill=="steal") {
+			// у рулеров нельзя
+			if(victim.getClan()=="RULER") return true;
+			// у закованных нельзя 
+			if(victim.isAffected("manacles")) return true;
+
+			if(victim.in_room.area.area_flag&.tables.area_flags.hometown) {
+				//в хоумтауне
+				if(victim.is_npc()) {
+					//моб
+					if(isSpecMob(victim)) //спецмоб - преступление 
+						return true;
+
+					return false; //остальные мобы - нет
+				} else {
+					//чар
+					if(victim.clan.diplomacy(.Clan("ruler")) == "war" //война с рулерами
+						&& !victim.isAffected("manacles")) //и не закован в наручники
+						return false; //не преступление
+
+					if(victim.clan.diplomacy(ch.clan) == "war") //война между кланами - нет 
+						return false;
+
+					return true; //остальные - да
+				}
+			} 
+			return false;
+		}
+
+		return false;
+	};
 	//onCommand(ch, cmdName, cmdArgs) - ch пытается выполнить рядом с нами команду cmdName с аргументами cmdArgs. если вернуть true, выполнить команду не удастся.
 	SpecGuardOnSkill = function(mob, ch, skillName, success, victim) {
 		//onSkill(ch, skillName, success, victim) - вызывается для комнаты. ch - кто применяет умение, skillName - название скила, success - успешно применилось или нет, victim - цель скила либо null
 		this = .tmp.cityguards;
+		var crime;
 
 		if(skillName != 'steal') return false;
 
@@ -317,9 +352,6 @@
 		//этого не вижу или не видит меня
 		if(!mob.can_see_mob(ch)) return false;
 
-		//не спецмоб
-		if(victim.is_npc() && !isSpecMob(victim)) return false;
-
 		//у этих пусть воруют (война с Рулерами)
 		if(victim.clan.diplomacy(.Clan("ruler")) == "war" 
 			&& !victim.isAffected("manacles")) return false;
@@ -327,7 +359,10 @@
 		//не заметил:
 		if(success && .chance( 90 - .number_range(0, 20))) return false;
 
-		if(success) ch.act("Тебя застукали за воровством!");
+		crime = isCrime(ch, victim, skillName);
+
+		if(success && !(ch.PK_flag&16)) 
+			ch.act("Тебя застукали за воровством!");
 
 		mob.interpret_raw("yell", .fmt("%1$^C1 - подл%1$Gый|ый|ая вор%1$G||овка!", ch));
 		if(!mob.is_safe(ch) //если не защищают боги
@@ -339,7 +374,7 @@
 			mob.interpret_raw("yell", "ТЫ ЕЩЕ ОТВЕТИШЬ ЗА СВОИ ПРЕСТУПЛЕНИЯ!");
 		}
 
-		if( !ch.is_npc() ) {
+		if( crime ) {
 			ch.PK_flag = .set_bit(ch.PK_flag, 16);
 			ch.PK_flag = .unset_bit(ch.PK_flag, 1);
 			ch.PK_time_t = 15 * 16;
