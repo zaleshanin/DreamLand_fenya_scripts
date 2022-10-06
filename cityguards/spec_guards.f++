@@ -1,276 +1,394 @@
 .apply(function(){
-    /*
-    скрипт вешается на всех мобов имеющих spec_guard и спецгвардов Правителей 
-    v.2
-    */
-    var initiator; 
-    initiator = this;
-    //проверка наличия используемых функций
-    if(.tmp.quest==null 
-        || .tmp.quest.sleep==null
-        || .tmp.quest.say==null
-        || .tmp.quest.tell==null)
-        throw(".tmp.quest functions not found!!!");
+	/*
+	скрипт вешается на всех мобов имеющих spec_guard и спецгвардов Правителей 
+	v.2
+	*/
+	var initiator; 
+	initiator = this;
+	//проверка наличия используемых функций
+	if(.tmp.quest==null 
+		|| .tmp.quest.sleep==null
+		|| .tmp.quest.say==null
+		|| .tmp.quest.tell==null)
+		throw(".tmp.quest functions not found!!!");
 
-    if(.tmp.cityguards == null)
-        .tmp.cityguards = .Map();
+	if(.tmp.cityguards == null)
+		.tmp.cityguards = .Map();
 
-    this = .tmp.cityguards;
+	this = .tmp.cityguards;
 
-    TalkTask = function(mob, ch) {
-        this = .Map();
+	TalkTask = function(mob, ch) {
+		this = .Map();
 
-        this.mob = mob;
+		this.mob = mob;
 		this.ch = ch;
 		
 		thread = .scheduler.Thread(function(this) {
 			try {
-                run();
+				run();
 			} catch (e) {
-                if(e == "sleep: ch left the room" || e == "sleep: someone is dead") {
-                    // персонаж ушел, или кто-то скончался - это норма!
-                    .print("cityguard.TalkTask normal: " + e);
-                } else {
-                    .print("cityguard.TalkTask: " + e);
-                }
-                cleanup();
-                debug(e);
+				if(e == "sleep: ch left the room" || e == "sleep: someone is dead") {
+					// персонаж ушел, или кто-то скончался - это норма!
+					.print("cityguard.TalkTask normal: " + e);
+				} else {
+					.print("cityguard.TalkTask: " + e);
+				}
+				cleanup();
+				debug(e);
 			}
 			//cleanup();
 		}, this);
 
-        thread.name = .fmt("%s:%C1 talk %C1",ch.in_room.areaname,mob,ch);
+		thread.name = .fmt("%s:%C1 talk %C1",ch.in_room.areaname,mob,ch);
 
-        run = function() {
-            say("Я Вас знаю?",1);
-            if(ch.hometown.areaname==mob.in_room.areaname) {
-                say("Ну ладно, мой друг. Я попытаюсь вспомнить.",1);
-                social_vict("smile",0);
-            } else {
-                say("Я не знаю тебя. Уходи прочь!",1);
-                social_vict("frown",0);
-            }
-            done();
-        };
-        cleanup = function() {
-            thread.stop();
-            mob.talktask = null;
+		run = function() {
+			if(ch.getClan()!="RULER") {
+				say("Я Вас знаю?",1);
+				if(ch.hometown.areaname==mob.in_room.areaname) {
+					say("Ну ладно, мой друг. Я попытаюсь вспомнить.",1);
+					social_vict("smile",0);
+				} else {
+					say("Я не знаю тебя. Уходи прочь!",1);
+					social_vict("frown",0);
+				}
+			} else {
+				var weapon, echo, recho, sheath; sheath = false;
+				weapon = mob.get_eq_char("sheath");
+				
+				if( weapon != null ) {
+					//SheathWearloc -> [scabbard, belt, back]
+					if( weapon.extra_flags&.tables.extra_flags.noremove ) {
+						weapon = null;
+					} else {
+						sheath = true;
+						weapon.remove(true);
+					}
+				} else {
+					weapon = mob.get_eq_char("wield");
+				}
+				
+				if ( weapon != null ) {
+					act = "Ты вскидываешь %3$O4, салютуя %2$C3.";
+					recho = "%1$^C1 вскидывает %3$O4, салютуя тебе.";
+					rvecho = "%1$^C1 вскидывает %3$O4, салютуя %2$C3.";
+				} else {
+					act = "Выражая уважение, ты салютуeшь %2$C3.";
+					recho = "%1$^C1 салютует тебе, выражая уважение.";
+					rvecho = "%1$^C1 салютует %2$C3, выражая уважение.";
+				}
+				emote(act, recho, rvecho, weapon, 0);
+				if(sheath) {
+					weapon.wear("sheath");
+				}
+			}
+			done();
+		};
+		cleanup = function() {
+			thread.stop();
+			mob.talktask = null;
 		};
 		wait = function(seconds, mob, ch) {
-            .scheduler.sleep(seconds * 4);
-            if (mob.dead || ch.dead)
-                throw "sleep: someone is dead";
-            if (mob.in_room != ch.in_room)
-                throw "sleep: ch left the room";
-        };
-        say = function(msg, pause) {
+			.scheduler.sleep(seconds * 4);
+			if (mob.dead || ch.dead)
+				throw "sleep: someone is dead";
+			if (mob.in_room != ch.in_room)
+				throw "sleep: ch left the room";
+		};
+		say = function(msg, pause) {
 			.tmp.quest.say(msg, mob, ch);
 			wait(pause, mob, ch);
 		};
-        tell = function(msg, pause) {
+		tell = function(msg, pause) {
 			.tmp.quest.tell(msg, mob, ch);
 			wait(pause, mob, ch);
 		};
-        social_vict = function(social, pause) {
-            mob.interpret_cmd(social, ch.name);
+		social_vict = function(social, pause) {
+			mob.interpret_cmd(social, ch.name);
 			wait(pause, mob, ch);
-        };
-        done = function() {
-            debug("done...");
-            mob.talktask=null;
-            mob.in_room.ppl.forEach(function(ch){
-                if(this.is_npc() && this.spec_fun=="spec_guard") {
-                    if(this.talkativeArray==null)
-                        this.talkativeArray = .Array();
-                    this.talkativeArray[ch.name] = .current_time;
-                }
-            },ch);
-        };
-        debug = function(str) {
-            if(.buildplot) {
-                var vict;
-                vict = .get_char_world("Zaleshanin");
-                if(vict==null) vict = .get_char_world("Miyamoto");
-                if(vict!=null) vict.act("citiguards debug: "+str);
-            }
-        };
-        
-        return this;
-    };
+		};
+		emote = function(ect, recho, rvecho, weapon, pause) {
+			mob.act(act, mob, ch, weapon);
+			ch.act(recho, mob, ch, weapon);
+			mob.rvecho(ch, rvecho, mob, ch, weapon);
+			wait(pause, mob, ch);
+		};
+		done = function() {
+			debug("done...");
+			mob.talktask=null;
+			mob.in_room.ppl.forEach(function(ch){
+				if(this.is_npc() && this.spec_fun=="spec_guard") {
+					if(this.talkativeArray==null)
+						this.talkativeArray = .Array();
+					this.talkativeArray[ch.name] = .current_time;
+				}
+			},ch);
+		};
+		debug = function(str) {
+			if(.buildplot) {
+				var vict;
+				vict = .get_char_world("Zaleshanin");
+				if(vict==null) vict = .get_char_world("Miyamoto");
+				if(vict!=null) vict.act("citiguards debug: "+str);
+			}
+		};
+		
+		return this;
+	};
 
-    isSpecMob = function (ch) {
+	isSpecMob = function (ch) {
 
-        if (!ch.is_npc()) 
-            return false;
+		if (!ch.is_npc()) 
+			return false;
 
-        if (ch.hasOccupation("shopper") || ch.hasOccupation("practicer")
-            || ch.hasOccupation("repairman") || ch.hasOccupation("quest_trader")
-            || ch.hasOccupation("healer") || ch.hasOccupation("smithman")
-            || ch.hasOccupation("trainer") || ch.hasOccupation("trainer")
-            || (ch.spec_fun != null && (ch.spec_fun == "spec_guard"
-                || ch.spec_fun == "spec_patrolman" || ch.spec_fun == "spec_executioner" 
-                || ch.spec_fun == "spec_mayor" || ch.spec_fun == "spec_captain"))) {
-            return true;
-        }
-        return false;
-    };
+		if (.tmp.mob.hasService(ch)
+			|| (ch.spec_fun != null && (ch.spec_fun == "spec_guard"
+				|| ch.spec_fun == "spec_patrolman" || ch.spec_fun == "spec_executioner" 
+				|| ch.spec_fun == "spec_mayor" || ch.spec_fun == "spec_captain"))) {
+			return true;
+		}
+		return false;
+	};
 
-    checkVictim = function(mob, ch) {
-        //хаоситам ни с кем драться нельзя
-        if(ch.getClan()=="CHAOS") return true;
-        //врагам рулеров драться нельзя
-        if(ch.clan.diplomacy(.Clan("ruler")) == "war") return true;
-        //беглым и в розыске драться нельзя
-        if(.isset_bit(ch.act, .tables.plr_flags.wanted) || ch.isAffected("jail")) return true;
-        
-        if(ch.fighting.is_npc()) {
-            //защищаем спецмобов
-            if(isSpecMob(ch.fighting)) return true;
-            //не защищаем квестовых мобов
-            if(ch.fighting.hasDestiny) return false;
-        } else {
-            //с рулерами драться не надо
-            if(ch.fighting.getClan()=="RULER") return true;
-            //хаоситов бить можно
-            if(ch.fighting.getClan()=="CHAOS") return false;
-            // закованных в кандалы не бить
-            if(ch.fighting.isAffected("manacles")) return true;
-            //врагов рулеров бить можно
-            if(ch.fighting.clan.diplomacy(.Clan("ruler")) == "war") return false;
-            //этих бить тоже можно
-            if(.isset_bit(ch.fighting.act, .tables.plr_flags.wanted) 
-                || ch.fighting.isAffected("jail")) return false;
-            //по прописке
-            if(ch.hometown.areaname!=mob.in_room.areaname 
-                && mob.in_room.areaname==ch.fighting.hometown.areaname)
-                return true;
-        }
-        //по алигну
-        if(ch.alignName!=mob.alignName 
-            && mob.alignName==ch.fighting.alignName)
-            return true;
+	checkVictim = function(mob, ch) {
+		//хаоситам ни с кем драться нельзя
+		if(ch.getClan()=="CHAOS") return true;
+		//врагам рулеров драться нельзя
+		if(ch.clan.diplomacy(.Clan("ruler")) == "war") return true;
+		//беглым и в розыске драться нельзя
+		if(.isset_bit(ch.act, .tables.plr_flags.wanted) || ch.isAffected("jail")) return true;
+		
+		if(ch.fighting.is_npc()) {
+			//защищаем спецмобов
+			if(isSpecMob(ch.fighting)) return true;
+			//не защищаем квестовых мобов
+			if(ch.fighting.hasDestiny) return false;
+		} else {
+			//с рулерами драться не надо
+			if(ch.fighting.getClan()=="RULER") return true;
+			//хаоситов бить можно
+			if(ch.fighting.getClan()=="CHAOS") return false;
+			// закованных в кандалы не бить
+			if(ch.fighting.isAffected("manacles")) return true;
+			//врагов рулеров бить можно
+			if(ch.fighting.clan.diplomacy(.Clan("ruler")) == "war") return false;
+			//этих бить тоже можно
+			if(.isset_bit(ch.fighting.act, .tables.plr_flags.wanted) 
+				|| ch.fighting.isAffected("jail")) return false;
+			//по прописке
+			if(ch.hometown.areaname!=mob.in_room.areaname 
+				&& mob.in_room.areaname==ch.fighting.hometown.areaname)
+				return true;
+		}
+		//по алигну
+		if(ch.alignName!=mob.alignName 
+			&& mob.alignName==ch.fighting.alignName)
+			return true;
 
-        return false;
-    };
+		return false;
+	};
+	checkGuard = function(mob) {
+		//очарован
+		if(mob.charmed) return false;
+		//не хоумтаун
+		if(!(mob.in_room.area.area_flag&.tables.area_flags.hometown)) return false;
+		//в отключке
+		if(mob.position < .tables.position_table.rest) return false;
+		//дерусь
+		if(mob.fighting!=null) return false;
 
-    SpecGuardOnSpec = function(mob) {
-        this = .tmp.cityguards;
-        //очарован
-        if(mob.charmed) return false;
-        //не хоумтаун
-        if(!(mob.in_room.area.area_flag&.tables.area_flags.hometown)) return false;
-        //в отключке
-        if(mob.position < .tables.position_table.rest) return false;
-        //дерусь
-        if(mob.fighting!=null) return false;
-        //никого нет
-        if(mob.in_room.ppl.size()<=1) return false;
+		return true;
+	};
+	SpecGuardOnSpec = function(mob) {
+		this = .tmp.cityguards;
+		
+		//базовые проверки гварда на пригодность
+		if(!checkGuard(mob)) return false;
+		
+		//никого нет
+		if(mob.in_room.ppl.size()<=1) return false;
 
-        var ppl, victim, msg;
-        ppl = .List(); //список с кем поговорить
-        victim = null; //если нашли кого бить!
-        crime = ''; //чем провинился
+		var ppl, victim, msg;
+		ppl = .List(); //список с кем поговорить
+		victim = null; //если нашли кого бить!
+		crime = ''; //чем провинился
 
-        for (ch in mob.in_room.ppl) {
-            //с этими не связываюсь
-            if(ch.is_npc() || ch.is_immortal()) continue;
-            //этого не вижу
-            if(!mob.can_see_mob(ch)) continue;
-            
-            if(.isset_bit(ch.act, .tables.plr_flags.wanted) || ch.isAffected("jail")) {
-                victim = ch;
-                crime = ', ПРЕСТУПНИК';
-                break;
-            }
-            if(ch.fighting!=null && checkVictim(mob, ch)) {
-                victim = ch;
-                break;
-            }
+		for (ch in mob.in_room.ppl) {
+			//с этими не связываюсь
+			if(ch.is_npc() || ch.is_immortal() || ch.getClan()=="RULER") continue;
+			//этого не вижу
+			if(!mob.can_see_mob(ch)) continue;
+			
+			if(.isset_bit(ch.act, .tables.plr_flags.wanted) || ch.isAffected("jail")) {
+				victim = ch;
+				crime = ', ПРЕСТУПНИК';
+				break;
+			}
+			if(ch.fighting!=null && checkVictim(mob, ch)) {
+				victim = ch;
+				break;
+			}
 
-            //с одним и тем же разговариваем не чаще чем раз в 8 часов
-            if(mob.talkativeArray!=null && mob.talkativeArray[ch.name]!=null 
-                && .current_time - mob.talkativeArray[ch.name] < 60*60*8) continue;
-            
-            ppl.push_back(ch);
-        }
+			//с одним и тем же разговариваем не чаще чем раз в 8 часов
+			if(mob.talkativeArray!=null && mob.talkativeArray[ch.name]!=null 
+				&& .current_time - mob.talkativeArray[ch.name] < 60*60*8) continue;
+			
+			ppl.push_back(ch);
+		}
 
-        if(crime!='') {
-            //TODO перенести в onGreet
-            mob.setClan("RULER");
-            mob.interpret_raw("cb", .fmt("ВНИМАНИЕ!!! %1$^C1 находится в месте под названием %2$s в районе %3$s.", victim, victim.in_room.name, victim.in_room.areaname));
-        }
-        if(victim!=null) {
-            if(!mob.is_safe(victim) //если не защищают боги
-                && ((mob.getModifyLevel()+8 > victim.getModifyLevel()) //совладаем по уровню
-                    || (victim.fighting!=null && victim.fighting!=mob)) //или кому-то помогаем
-                ) {
-                mob.interpret_raw("yell", .fmt("%1$^C1%2$s! ЗАЩИЩАЙ НЕВИННЫХ!! СМЕРТЬ ПРЕСТУПНИКАМ!!", victim, crime));
-                mob.multi_hit(victim);
-            } else {
-                mob.recho("%1$^C1 кричит '%2$^C1! ТЫ ЕЩЕ ОТВЕТИШЬ ЗА СВОИ ПРЕСТУПЛЕНИЯ!'",mob, victim);
-            }
-            return true;
-        }
+		if(crime!='') {
+			//TODO перенести в onGreet
+			mob.setClan("RULER");
+			mob.interpret_raw("cb", .fmt("ВНИМАНИЕ!!! %1$^C1 находится в месте под названием %2$s в %3$N6.", victim, victim.in_room.name, victim.in_room.area.name));
+		}
+		if(victim!=null) {
+			if(!mob.is_safe(victim) //если не защищают боги
+				&& ((mob.getModifyLevel()+8 > victim.getModifyLevel()) //совладаем по уровню
+					|| (victim.fighting!=null && victim.fighting!=mob)) //или кому-то помогаем
+				) {
+				mob.interpret_raw("yell", .fmt("%1$^C1%2$s! ЗАЩИЩАЙ НЕВИННЫХ!! СМЕРТЬ ПРЕСТУПНИКАМ!!", victim, crime));
+				mob.multi_hit(victim);
+			} else {
+				mob.recho("%1$^C1 кричит '%2$^C1! ТЫ ЕЩЕ ОТВЕТИШЬ ЗА СВОИ ПРЕСТУПЛЕНИЯ!'",mob, victim);
+			}
+			return true;
+		}
 
-        if(mob.spec_fun==null || mob.spec_fun!="spec_guard") 
-            return false;
+		if(mob.spec_fun==null || mob.spec_fun!="spec_guard") 
+			return false;
 
-        //уже раговариваю
-        if(mob.talktask != null 
-            && mob.talktask.thread!=null 
-            && mob.talktask.thread.running)
-            return false;
+		//уже раговариваю
+		if(mob.talktask != null 
+			&& mob.talktask.thread!=null 
+			&& mob.talktask.thread.running)
+			return false;
 
-        //не с кем разговаривать
-        if(ppl.size()==0)
-            return false;
-        //не свезло
-        if(.number_percent()%42 != 0)
-            return false; 
+		//не с кем разговаривать
+		if(ppl.size()==0)
+			return false;
+		//не свезло
+		if(.number_percent()%42 != 0)
+			return false; 
 
-        mob.talktask = .tmp.cityguards.TalkTask(mob, ppl.random());
-        mob.talktask.thread.start();
-    };
+		mob.talktask = .tmp.cityguards.TalkTask(mob, ppl.random());
+		mob.talktask.thread.start();
+	};
+	SpecGuardOnGreet = function(mob, ch) {
+		/*
+			Приветствуем рулера
+		*/
+		this = .tmp.cityguards;
 
-    Init = function(initiator) {
-        var result_list;
-        result_list = .Array();
-    
-        
-        for( mob = .char_list; mob != null; mob = mob.next ) {
-            if(!mob.is_npc()) continue;
-            if(mob.spec_fun==null || mob.spec_fun!="spec_guard") continue;
-    
-            if(result_list[mob.in_room.areaname]==null) {
-                result_list[mob.in_room.areaname]=.List();
-            }
-            if(result_list[mob.in_room.areaname].has(mob.pIndexData.vnum)) continue;
-            result_list[mob.in_room.areaname].push_back(mob.pIndexData.vnum);
-        }
-        //не spec_fun==spec_guards
-        result_list['Дворец Правителей']=.List().add(11); // спецгвард правителей
-    
-        var index, mob;
-        initiator.act("Activating talkative cityguards:");
-        for(areaname in result_list.keys) {
-            initiator.act("  "+areaname+":");
-            for(vnum in result_list[areaname]) {
-                index = .get_mob_index(vnum);
-                index.onSpec = function(mob) {
-                    .tmp.cityguards.SpecGuardOnSpec(mob);
-                };
+		//базовые проверки гварда на пригодность
+		if(!checkGuard(mob)) return false;
 
-                mob = index.instances.at(0);
-                initiator.act("    [%d] %s",vnum,mob.name);
-            }
-        }
-    
-    };
+		//с этими не связываюсь
+		if(ch.is_npc() || ch.is_immortal()) return false; 
+		//не рулер
+		if(ch.getClan()!="RULER") return false;
+		//не чаще 8 часов
+		if(mob.talkativeArray!=null && mob.talkativeArray[ch.name]!=null 
+				&& .current_time - mob.talkativeArray[ch.name] < 60*60*8) return false;
+		//этого не вижу или не видит меня
+		if(!mob.can_see_mob(ch) || !ch.can_see_mob(mob)) return false;
+		//не демаскируемся
+		if(mob.affected_by & .tables.affect_flags.hide 
+			|| mob.affected_by & .tables.affect_flags.fade 
+			|| mob.affected_by & .tables.affect_flags.camouflage) return false;
+		//не свезло
+		if(.number_percent()%5 != 0)
+			return false; 
 
-    Init(initiator);
+		mob.talktask = .tmp.cityguards.TalkTask(mob, ch);
+		mob.talktask.thread.start();
+	};
+	//onCommand(ch, cmdName, cmdArgs) - ch пытается выполнить рядом с нами команду cmdName с аргументами cmdArgs. если вернуть true, выполнить команду не удастся.
+	SpecGuardOnSkill = function(mob, ch, skillName, success, victim) {
+		//onSkill(ch, skillName, success, victim) - вызывается для комнаты. ch - кто применяет умение, skillName - название скила, success - успешно применилось или нет, victim - цель скила либо null
+		this = .tmp.cityguards;
 
-    
-    
-    /* %C1, отдавая воинские почести, салютет $O1. 
-    %C1 выкидывает %O1 из ножен, салютуя.*/
+		if(skillName != 'steal') return false;
+
+		//базовые проверки гварда на пригодность
+		if(!checkGuard(mob)) return false;
+
+		//с этими не связываюсь
+		if(ch.is_immortal()) return false; 
+
+		//этого не вижу или не видит меня
+		if(!mob.can_see_mob(ch)) return false;
+
+		//не спецмоб
+		if(victim.is_npc() && !isSpecMob(victim)) return false;
+
+		//у этих пусть воруют (война с Рулерами)
+		if(victim.clan.diplomacy(.Clan("ruler")) == "war" 
+			&& !victim.isAffected("manacles")) return false;
+
+		//не заметил:
+		if(success && .chance( 90 - .number_range(0, 20))) return false;
+
+		if(success) ch.act("Тебя застукали за воровством!");
+
+		mob.interpret_raw("yell", .fmt("%1$^C1 - подл%1$Gый|ый|ая вор%1$G||овка!", ch));
+		if(!mob.is_safe(ch) //если не защищают боги
+			&& mob.getModifyLevel()+8 > ch.getModifyLevel() //совладаем по уровню
+		) {
+			mob.interpret_raw("yell", "ЗАЩИЩАЙ НЕВИННЫХ!! СМЕРТЬ ПРЕСТУПНИКАМ!!");
+			mob.multi_hit(ch);
+		} else {
+			mob.interpret_raw("yell", "ТЫ ЕЩЕ ОТВЕТИШЬ ЗА СВОИ ПРЕСТУПЛЕНИЯ!");
+		}
+
+		if( !ch.is_npc() ) {
+			ch.PK_flag = .set_bit(ch.PK_flag, 16);
+			ch.PK_flag = .unset_bit(ch.PK_flag, 1);
+			ch.PK_time_t = 15 * 16;
+		}
+	};
+
+	Init = function(initiator) {
+		var result_list;
+		result_list = .Array();
+	
+		
+		for( mob = .char_list; mob != null; mob = mob.next ) {
+			if(!mob.is_npc()) continue;
+			if(mob.spec_fun==null || mob.spec_fun!="spec_guard") continue;
+	
+			if(result_list[mob.in_room.areaname]==null) {
+				result_list[mob.in_room.areaname]=.List();
+			}
+			if(result_list[mob.in_room.areaname].has(mob.pIndexData.vnum)) continue;
+			result_list[mob.in_room.areaname].push_back(mob.pIndexData.vnum);
+		}
+		//не spec_fun==spec_guards
+		result_list['Дворец Правителей']=.List().add(11); // спецгвард правителей
+	
+		var index, mob;
+		initiator.act("Activating talkative cityguards:");
+		for(areaname in result_list.keys) {
+			initiator.act("  "+areaname+":");
+			for(vnum in result_list[areaname]) {
+				index = .get_mob_index(vnum);
+				index.onSpec = function(mob) {
+					.tmp.cityguards.SpecGuardOnSpec(mob);
+				};
+				index.onGreet = function(mob, ch) {
+					.tmp.cityguards.SpecGuardOnGreet(mob,ch);
+				};
+				index.onSkill = function(mob, ch, skillName, success, victim) {
+					.tmp.cityguards.SpecGuardOnSkill(mob, ch, skillName, success, victim);
+				};
+
+				mob = index.instances.at(0);
+				initiator.act("    [%d] %s",vnum,mob.name);
+			}
+		}
+	
+	};
+
+	Init(initiator);
+
+	/* .get_mob_index(3060).onSpec = function(mob) {.tmp.cityguards.OnSpecTalkative(mob);}; */
+		
 }, this, .List())
