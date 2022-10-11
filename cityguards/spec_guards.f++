@@ -186,11 +186,42 @@
 
 		return false;
 	};
+	isCrime = function(ch, victim, skill) {
+		if(skill=="steal") {
+			// у рулеров нельзя
+			if(victim.getClan()=="RULER") return true;
+			// у закованных нельзя 
+			if(victim.isAffected("manacles")) return true;
+
+			if(victim.in_room.area.area_flag&.tables.area_flags.hometown) {
+				//в хоумтауне
+				if(victim.is_npc()) {
+					//моб
+					if(isSpecMob(victim)) //спецмоб - преступление 
+						return true;
+
+					return false; //остальные мобы - нет
+				} else {
+					//чар
+					if(victim.clan.diplomacy(.Clan("ruler")) == "war" //война с рулерами
+						&& !victim.isAffected("manacles")) //и не закован в наручники
+						return false; //не преступление
+
+					if(victim.clan.diplomacy(ch.clan) == "war") //война между кланами - нет 
+						return false;
+
+					return true; //остальные - да
+				}
+			} 
+			return false;
+		}
+
+		return false;
+	};
 	checkGuard = function(mob) {
+		if(!.tmp.mob.isActive(mob)) return false;
 		//очарован
 		if(mob.charmed) return false;
-		//в отключке
-		if(mob.position < .tables.position_table.rest) return false;
 		//дерусь
 		if(mob.fighting!=null) return false;
 
@@ -303,43 +334,10 @@
 		mob.talktask.thread.start();
 	};
 
-	isCrime = function(ch, victim, skill) {
-		if(skill=="steal") {
-			// у рулеров нельзя
-			if(victim.getClan()=="RULER") return true;
-			// у закованных нельзя 
-			if(victim.isAffected("manacles")) return true;
-
-			if(victim.in_room.area.area_flag&.tables.area_flags.hometown) {
-				//в хоумтауне
-				if(victim.is_npc()) {
-					//моб
-					if(isSpecMob(victim)) //спецмоб - преступление 
-						return true;
-
-					return false; //остальные мобы - нет
-				} else {
-					//чар
-					if(victim.clan.diplomacy(.Clan("ruler")) == "war" //война с рулерами
-						&& !victim.isAffected("manacles")) //и не закован в наручники
-						return false; //не преступление
-
-					if(victim.clan.diplomacy(ch.clan) == "war") //война между кланами - нет 
-						return false;
-
-					return true; //остальные - да
-				}
-			} 
-			return false;
-		}
-
-		return false;
-	};
 	//onCommand(ch, cmdName, cmdArgs) - ch пытается выполнить рядом с нами команду cmdName с аргументами cmdArgs. если вернуть true, выполнить команду не удастся.
 	SpecGuardOnSkill = function(mob, ch, skillName, success, victim) {
 		//onSkill(ch, skillName, success, victim) - вызывается для комнаты. ch - кто применяет умение, skillName - название скила, success - успешно применилось или нет, victim - цель скила либо null
 		this = .tmp.cityguards;
-		var crime;
 
 		if(skillName != 'steal') return false;
 
@@ -359,12 +357,14 @@
 		//не заметил:
 		if(success && .chance( 90 - .number_range(0, 20))) return false;
 
+		var crime; 
 		crime = isCrime(ch, victim, skillName);
 
-		if(success && !(ch.PK_flag&16)) 
+		if(success && !(ch.PK_flag&16)) {
 			ch.act("Тебя застукали за воровством!");
+		}
 
-		mob.interpret_raw("yell", .fmt("%1$^C1 - подл%1$Gый|ый|ая вор%1$G||овка!", ch));
+		mob.interpret_raw("yell", .fmt("%1$^C1 -- подл%1$Gый|ый|ая вор%1$G||овка!", ch));
 		if(!mob.is_safe(ch) //если не защищают боги
 			&& mob.getModifyLevel()+8 > ch.getModifyLevel() //совладаем по уровню
 		) {
