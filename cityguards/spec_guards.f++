@@ -52,33 +52,10 @@
 					social_vict("frown",0);
 				}
 			} else {
-				var weapon, echo, recho, sheath; sheath = false;
-				weapon = mob.get_eq_char("sheath");
-				
-				if( weapon != null ) {
-					//SheathWearloc -> [scabbard, belt, back]
-					if( weapon.extra_flags&.tables.extra_flags.noremove ) {
-						weapon = null;
-					} else {
-						sheath = true;
-						weapon.remove(true);
-					}
+				if(.chance(30)) {
+					salute(0);
 				} else {
-					weapon = mob.get_eq_char("wield");
-				}
-				
-				if ( weapon != null ) {
-					act = "Ты вскидываешь %3$O4, салютуя %2$C3.";
-					recho = "%1$^C1 вскидывает %3$O4, салютуя тебе.";
-					rvecho = "%1$^C1 вскидывает %3$O4, салютуя %2$C3.";
-				} else {
-					act = "Выражая уважение, ты салютуeшь %2$C3.";
-					recho = "%1$^C1 салютует тебе, выражая уважение.";
-					rvecho = "%1$^C1 салютует %2$C3, выражая уважение.";
-				}
-				emote(act, recho, rvecho, weapon, 0);
-				if(sheath) {
-					weapon.wear("sheath");
+					social_vict("cheer",0);
 				}
 			}
 			done();
@@ -105,6 +82,37 @@
 		social_vict = function(social, pause) {
 			mob.interpret_cmd(social, ch.name);
 			wait(pause, mob, ch);
+		};
+		salute = function(pause) {
+			var weapon, rvecho, recho, sheath; sheath = false;
+			weapon = mob.get_eq_char("sheath");
+			
+			if( weapon != null ) {
+				//SheathWearloc -> [scabbard, belt, back]
+				if( weapon.extra_flags&.tables.extra_flags.noremove ) {
+					weapon = null;
+				} else {
+					sheath = true;
+					weapon.remove(true);
+				}
+			} else {
+				weapon = mob.get_eq_char("wield");
+			}
+			
+			if ( weapon != null ) {
+				act = "Ты вскидываешь %3$O4, салютуя %2$C3.";
+				recho = "%1$^C1 вскидывает %3$O4, салютуя тебе.";
+				rvecho = "%1$^C1 вскидывает %3$O4, салютуя %2$C3.";
+			} else {
+				act = "Выражая уважение, ты салютуeшь %2$C3.";
+				recho = "%1$^C1 салютует тебе, выражая уважение.";
+				rvecho = "%1$^C1 салютует %2$C3, выражая уважение.";
+			}
+			//cheer
+			emote(act, recho, rvecho, weapon, pause);
+			if(sheath) {
+				weapon.wear("sheath");
+			}
 		};
 		emote = function(ect, recho, rvecho, weapon, pause) {
 			mob.act(act, mob, ch, weapon);
@@ -338,43 +346,59 @@
 	SpecGuardOnSkill = function(mob, ch, skillName, success, victim) {
 		//onSkill(ch, skillName, success, victim) - вызывается для комнаты. ch - кто применяет умение, skillName - название скила, success - успешно применилось или нет, victim - цель скила либо null
 		this = .tmp.cityguards;
+		var crime; 
+		var zal;
+		zal=.get_char_world("zaleshanin");
 
 		if(skillName != 'steal') return false;
+		if(zal!=null)zal.ptc("steal detected");
 
 		//базовые проверки гварда на пригодность
 		if(!checkGuard(mob)) return false;
+		if(zal!=null)zal.ptc("->guard check ok");
 
 		//с этими не связываюсь
 		if(ch.is_immortal()) return false; 
+		if(zal!=null)zal.ptc("->imm check ok");
 
 		//этого не вижу или не видит меня
 		if(!mob.can_see_mob(ch)) return false;
+		if(zal!=null)zal.ptc("->see check ok");
 
 		//у этих пусть воруют (война с Рулерами)
-		if(victim.clan.diplomacy(.Clan("ruler")) == "war" 
+		if(!victim.is_npc() && victim.clan.diplomacy(.Clan("ruler")) == "war" 
 			&& !victim.isAffected("manacles")) return false;
+		if(zal!=null)zal.ptc("->ruler war check ok");
 
 		//не заметил:
 		if(success && .chance( 90 - .number_range(0, 20))) return false;
+		if(zal!=null)zal.ptc("->attention check ok");
 
-		var crime; 
 		crime = isCrime(ch, victim, skillName);
+		if(zal!=null && crime) zal.ptc("->crime detected");
+		if(zal!=null && !crime) zal.ptc("->not a crime");
 
 		if(success && !(ch.PK_flag&16)) {
 			ch.act("Тебя застукали за воровством!");
+			if(zal!=null)zal.ptc("->msg to thief");
 		}
 
 		mob.interpret_raw("yell", .fmt("%1$^C1 -- подл%1$Gый|ый|ая вор%1$G||овка!", ch));
 		if(!mob.is_safe(ch) //если не защищают боги
 			&& mob.getModifyLevel()+8 > ch.getModifyLevel() //совладаем по уровню
 		) {
+			if(zal!=null)zal.ptc("->guard can figth");
+
 			mob.interpret_raw("yell", "ЗАЩИЩАЙ НЕВИННЫХ!! СМЕРТЬ ПРЕСТУПНИКАМ!!");
 			mob.multi_hit(ch);
 		} else {
+			if(zal!=null)zal.ptc("->guard too small");
+
 			mob.interpret_raw("yell", "ТЫ ЕЩЕ ОТВЕТИШЬ ЗА СВОИ ПРЕСТУПЛЕНИЯ!");
 		}
 
 		if( crime ) {
+			if(zal!=null)zal.ptc("->add THIEF flag");
 			ch.PK_flag = .set_bit(ch.PK_flag, 16);
 			ch.PK_flag = .unset_bit(ch.PK_flag, 1);
 			ch.PK_time_t = 15 * 16;
