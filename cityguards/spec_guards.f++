@@ -17,6 +17,66 @@
 
 	this = .tmp.cityguards;
 
+	debug = function(str) {
+		var vict;
+		vict = .get_char_world("Zaleshanin");
+		if(vict==null) vict = .get_char_world("Miyamoto");
+		if(vict!=null) vict.act("Citiguards: "+str);
+	};
+
+	regNewcommer = function(mob, ch) {
+		checkStructure(mob);
+
+		mob.newcommers[ch.id] = .Map();
+		mob.newcommers[ch.id].time = .current_time;
+		mob.newcommers[ch.id].date = .date();
+		mob.newcommers[ch.id].killer = ch.PK_flag&2;
+		mob.newcommers[ch.id].violent = ch.PK_flag&4;
+		mob.newcommers[ch.id].thief = ch.PK_flag&16;
+		mob.newcommers[ch.id].commands = .List();
+		//	1 	- SLAIN
+		//	2 	- KILLER
+		//	4 	- VIOLENT
+		//	8 	- GHOST
+		//	16 	- THIEF
+	};
+	checkLeaving = function(mob,ch) {
+		checkStructure(mob);
+
+		if(mob.newcommers[ch.id]==null) {
+			debug('no newcommer record onLeave');
+			return;
+		}
+		//ничего не изменилось - стираем
+		if(mob.newcommers[ch.id].killer==ch.PK_flag&2 
+			&& mob.newcommers[ch.id].violent == ch.PK_flag&4
+			&& mob.newcommers[ch.id].thief == ch.PK_flag&16
+		) {
+			mob.newcommers[ch.id] = null;
+			return;
+		}
+
+		notebookWrite(mob, ch);
+	};
+	notebookWrite = function(mob, ch) {
+		var newRecord; newRecord = .Map();
+		newRecord.enter = .Map();
+		newRecord.enter.time = mob.newcommers[ch.id].time;
+		newRecord.enter.date = mob.newcommers[ch.id].date;
+		newRecord.enter.stats = .Map();
+		newRecord.enter.stats.killer = mob.newcommers[ch.id].killer;
+		newRecord.enter.stats.violent = mob.newcommers[ch.id].violent;
+		newRecord.enter.stats.thief = mob.newcommers[ch.id].thief;
+
+		//stop
+	};
+
+	checkStructure = function(mob) {
+		if(mob.newcommers==null) mob.newcommers = .Array();
+		if(mob.notepad==null) mob.notepad = .Array();
+
+	};
+
 	TalkTask = function(mob, ch) {
 		this = .Map();
 
@@ -313,11 +373,12 @@
 		mob.talktask.thread.start();
 	};
 	SpecGuardOnGreet = function(mob, ch) {
-		/*
-			Приветствуем рулера
-		*/
 		this = .tmp.cityguards;
+		
+		/*** берем на карандаш! ***/
+		regNewcommer(mob, ch);
 
+		/*** Приветствуем рулера ***/
 		//базовые проверки гварда на пригодность
 		if(!checkGuard(mob)) return false;
 
@@ -341,6 +402,12 @@
 		mob.talktask = .tmp.cityguards.TalkTask(mob, ch);
 		mob.talktask.thread.start();
 	};
+	SpecGuardOnLeave = function(mob, ch) {
+		this = .tmp.cityguards;
+		
+		/*** берем на карандаш! ***/
+		checkLeaving(mob, ch);
+	};
 
 	//onCommand(ch, cmdName, cmdArgs) - ch пытается выполнить рядом с нами команду cmdName с аргументами cmdArgs. если вернуть true, выполнить команду не удастся.
 	SpecGuardOnSkill = function(mob, ch, skillName, success, victim) {
@@ -349,44 +416,68 @@
 		var crime; 
 
 		if(skillName != 'steal') return false;
+		debug("steal detected");
 
 		//базовые проверки гварда на пригодность
 		if(!checkGuard(mob)) return false;
+		debug("->guard check ok");
 
 		//с этими не связываюсь
 		if(ch.is_immortal()) return false; 
+		debug("->imm check ok");
 
 		//этого не вижу или не видит меня
 		if(!mob.can_see_mob(ch)) return false;
+		debug("->see check ok");
 
 		//у этих пусть воруют (война с Рулерами)
 		if(!victim.is_npc() && victim.clan.diplomacy(.Clan("ruler")) == "war" 
 			&& !victim.isAffected("manacles")) return false;
+		debug("->ruler war check ok");
 
 		//не заметил:
 		if(success && .chance( 90 - .number_range(0, 20))) return false;
+		debug("->attention check ok");
 
 		crime = isCrime(ch, victim, skillName);
+		if(crime) debug("->crime detected");
+		if(!crime) debug("->not a crime");
 
 		if(success && !(ch.PK_flag&16)) {
 			ch.act("Тебя застукали за воровством!");
+			debug("->msg to thief");
 		}
 
 		mob.interpret_raw("yell", .fmt("%1$^C1 -- подл%1$Gый|ый|ая вор%1$G||овка!", ch));
 		if(!mob.is_safe(ch) //если не защищают боги
 			&& mob.getModifyLevel()+8 > ch.getModifyLevel() //совладаем по уровню
 		) {
+			debug("->guard can figth");
+
 			mob.interpret_raw("yell", "ЗАЩИЩАЙ НЕВИННЫХ!! СМЕРТЬ ПРЕСТУПНИКАМ!!");
 			mob.multi_hit(ch);
 		} else {
+			debug("->guard too small");
+
 			mob.interpret_raw("yell", "ТЫ ЕЩЕ ОТВЕТИШЬ ЗА СВОИ ПРЕСТУПЛЕНИЯ!");
 		}
 
 		if( crime ) {
-			ch.PK_flag = .set_bit(ch.PK_flag, 16);
-			ch.PK_flag = .unset_bit(ch.PK_flag, 1);
+			debug("->add THIEF flag");
+			ch.PK_flag = .set_bit(ch.PK_flag, 16); // THIEF
+			ch.PK_flag = .unset_bit(ch.PK_flag, 1); // SLAIN
 			ch.PK_time_t = 15 * 16;
 		}
+	};
+	SpecGuardPostSkill = function(mob, ch, skillName, success, victim) {
+		//TODO повесить на прототип гварда в Init()
+
+		/* eval ptc(.Skill('kick').name)
+		kick<АФК> 
+		eval ptc(.Skill('kick').nameRus)
+		пинок<АФК>  */
+
+		//TODO зарегать использование скила приведшее к изменению статуса
 	};
 
 	Init = function(initiator) {
@@ -421,6 +512,9 @@
 				};
 				index.onSkill = function(mob, ch, skillName, success, victim) {
 					.tmp.cityguards.SpecGuardOnSkill(mob, ch, skillName, success, victim);
+				};
+				index.onLeave = function(ch, from_room, movetype) {
+					.tmp.cityguards.SpecGuardOnLeave(mob, ch);
 				};
 
 				mob = index.instances.at(0);
