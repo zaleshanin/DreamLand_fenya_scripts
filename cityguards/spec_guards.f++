@@ -409,7 +409,6 @@
 		checkLeaving(mob, ch);
 	};
 
-	//onCommand(ch, cmdName, cmdArgs) - ch пытается выполнить рядом с нами команду cmdName с аргументами cmdArgs. если вернуть true, выполнить команду не удастся.
 	SpecGuardOnSkill = function(mob, ch, skillName, success, victim) {
 		//onSkill(ch, skillName, success, victim) - вызывается для комнаты. ch - кто применяет умение, skillName - название скила, success - успешно применилось или нет, victim - цель скила либо null
 		this = .tmp.cityguards;
